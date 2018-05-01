@@ -46,5 +46,12 @@ namespace TestVault.PageObjects
 		{
 			passWord.SendKeys(text);
 		}
+
+		public HomePage ConfirmLoginAndGoBackToHomePage()
+		{
+			wait.Until(ExpectedConditions.ElementToBeClickable(loginButton));
+			loginButton.Click();
+			return new HomePage(driver);
+		}
 	}
 }

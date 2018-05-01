@@ -9,7 +9,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace TestVault.PageObjects
 {
-    class HomePage
+    public class HomePage
     {
         private IWebDriver driver;
         private WebDriverWait wait;

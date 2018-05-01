@@ -17,6 +17,7 @@ namespace TestVault.Test
 	public class NUnitVaultTest
 	{
 		IWebDriver driver;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		[SetUp]
 		public void Init()
@@ -34,23 +35,20 @@ namespace TestVault.Test
 		}
 
 		[Test]
-		public void EditAnEventItem()
+		public void EditAnEventItem() /* Page oriented model */
 		{
 			// go to log in page
-
-			// traditional way:
-			// driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/index/hostLogin");
-
-			// page oriented model:
 			TestVault.PageObjects.LoginPage loginPage = new PageObjects.LoginPage(driver);
 			loginPage.NavigateToLoginPage();
 			loginPage.TypeUserName("plan.7");
 			loginPage.TypePassword("plan01#");
+			PageObjects.HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
 		}
 
 		[TearDown]
 		public void CleanUp()
 		{
+			log.Info("Test Completed!");
 			driver.Quit();
 		}
 	}

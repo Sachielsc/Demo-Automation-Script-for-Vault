@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestVault.PageObjects
 {
-    class Class1
+    public class Class1
     {
     }
 }
