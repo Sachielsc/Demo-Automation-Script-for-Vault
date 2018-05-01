@@ -22,9 +22,6 @@ namespace TestVault.Test
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 	    public static ExtentReports extent;
 	    public static ExtentTest test;
-        IWebDriver driver;
-	    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 
         [SetUp]
 		public void Init()
@@ -49,17 +46,13 @@ namespace TestVault.Test
 			// go to log in page
 			TestVault.PageObjects.LoginPage loginPage = new PageObjects.LoginPage(driver);
 			loginPage.NavigateToLoginPage();
-			loginPage.TypeUserName("plan.7");
-			loginPage.TypePassword("plan01#");
 			PageObjects.HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
-            // go to log in page
 
             // traditional way:
             // driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/index/hostLogin");
 
 		    // page oriented model:
 		    test = extent.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");
-            TestVault.PageObjects.LoginPage loginPage = new PageObjects.LoginPage(driver);
 		    log.Info("###############################################################################");
             //Console.WriteLine("###############################################################################");
 		    loginPage.NavigateToLoginPage();
