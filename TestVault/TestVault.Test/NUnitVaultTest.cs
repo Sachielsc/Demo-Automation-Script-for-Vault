@@ -44,22 +44,19 @@ namespace TestVault.Test
 		[Test]
 		public void EditAnEventItem() /* Page oriented model */
 		{
-			// go to log in page
+			// log in
 			LoginPage loginPage = new LoginPage(driver);
 			loginPage.NavigateToLoginPage();
-			loginPage.TypeUserName("plan.7");
+			loginPage.TypeUserName("plan.6");
 			loginPage.TypePassword("plan01#");
 
+			// go to home page
 			HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
+			homePage.WaitUntilHomePageLoadingComplete();
 
-		    // page oriented model:
-		    test = extent.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");
-		    log.Info("###############################################################################");
-            //Console.WriteLine("###############################################################################");
-		    loginPage.NavigateToLoginPage();
-			loginPage.TypeUserName("plan.7");
-			loginPage.TypePassword("plan01#");
-		    test.Pass("Test passed.");
+			// go to events page
+			EventsPage eventsPage = homePage.GoToEventsPage();
+
 		}
 
 		[TearDown]
