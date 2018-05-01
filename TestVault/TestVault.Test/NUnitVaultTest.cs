@@ -10,6 +10,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Chrome;
+using TestVault.PageObjects;
 
 namespace TestVault.Test
 {
@@ -38,18 +39,19 @@ namespace TestVault.Test
 		public void EditAnEventItem() /* Page oriented model */
 		{
 			// go to log in page
-			TestVault.PageObjects.LoginPage loginPage = new PageObjects.LoginPage(driver);
+			LoginPage loginPage = new LoginPage(driver);
 			loginPage.NavigateToLoginPage();
 			loginPage.TypeUserName("plan.7");
 			loginPage.TypePassword("plan01#");
-			PageObjects.HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
+			HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
+
 		}
 
 		[TearDown]
 		public void CleanUp()
 		{
 			log.Info("Test Completed!");
-			driver.Quit();
+			// driver.Quit();
 		}
 	}
 }
