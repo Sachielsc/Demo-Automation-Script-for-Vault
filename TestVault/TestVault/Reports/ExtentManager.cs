@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace TestVault.Reports
         private static ExtentReports extent;
         private static ExtentTest test;
         private static ExtentHtmlReporter htmlReporter;
-        private static String filePath = "./extentreport.html";
+        private static String filePath = "C:\\Users\\Admin\\Documents\\Code\\VaultAutomation\\TestVault\\TestVault\\Reports";//Directory.GetCurrentDirectory() + "extentreport.html"
 
         public static ExtentReports GetExtent()
         {
