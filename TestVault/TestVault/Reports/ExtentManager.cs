@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,10 @@ namespace TestVault.Reports
         private static ExtentReports extent;
         private static ExtentTest test;
         private static ExtentHtmlReporter htmlReporter;
-        private static String filePath = "./extentreport.html";
+        //"C:\\Users\\Admin\\Documents\\Code\\VaultAutomation\\TestVault\\TestVault\\Reports\\Test.html";//Directory.GetCurrentDirectory() + "extentreport.html"
+
+
+
 
         public static ExtentReports GetExtent()
         {
@@ -35,7 +39,12 @@ namespace TestVault.Reports
         private static ExtentHtmlReporter getHtmlReporter()
         {
 
-            htmlReporter = new ExtentHtmlReporter(filePath);
+
+            string path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
+            string actualPath = path.Substring(0, path.LastIndexOf("bin"));
+            string projectPath = new Uri(actualPath).LocalPath;
+            string reportPath = projectPath + "Reports\\MyOwnReport.html";
+            htmlReporter = new ExtentHtmlReporter(reportPath);
 
             // make the charts visible on report open
             htmlReporter.Configuration().ChartVisibilityOnOpen = true;
