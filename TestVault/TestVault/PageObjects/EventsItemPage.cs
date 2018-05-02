@@ -15,8 +15,8 @@ namespace TestVault.PageObjects
 		private IWebDriver driver;
 		private WebDriverWait wait;
 
-		[FindsBy(How = How.CssSelector, Using = "h4.panel-title a:nth-of-type(1)")]
-		private IWebElement typeOfEvent;
+		//[FindsBy(How = How.CssSelector, Using = "h4.panel-title a:nth-of-type(1)")]
+		//private IWebElement typeOfEvent;
 
 		[FindsBy(How = How.CssSelector, Using = "input#edit-caseno")]
 		private IWebElement caseNumber;
@@ -31,12 +31,18 @@ namespace TestVault.PageObjects
 		public void WaitUntilEventsItemPageLoadingComplete()
 		{
 			wait.Until(ExpectedConditions.ElementToBeClickable(caseNumber));
-			Task.Delay(3000).Wait();  /* tip: implicity wait*/
+			Task.Delay(1000).Wait();  /* tip: implicity wait*/
 		}
 
 		public void InputMandatoryValues()
 		{
+			caseNumber.Clear();
 			caseNumber.SendKeys("whatever");
+			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
+			category.SelectByText("Strain");
+			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
+			severity.SelectByText("Between Life and Death");
+
 		}
 	}
 }
