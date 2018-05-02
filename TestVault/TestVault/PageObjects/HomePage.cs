@@ -17,7 +17,7 @@ namespace TestVault.PageObjects
         [FindsBy(How = How.CssSelector, Using = "#left-panel > span > i")]
         private IWebElement expandArrow;
 
-		public HomePage(IWebDriver driver)
+        public HomePage(IWebDriver driver)
         {
             this.driver = driver;
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
