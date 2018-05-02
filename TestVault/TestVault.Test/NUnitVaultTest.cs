@@ -56,7 +56,14 @@ namespace TestVault.Test
 
 			// go to events page
 			EventsPage eventsPage = homePage.GoToEventsPage();
+			eventsPage.WaitUntilEventsPageLoadingComplete();
 
+			// go to event item page
+			EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
+			eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
+
+			// input mandatory values
+			eventsItemPage.InputMandatoryValues();
 		}
 
 		[TearDown]

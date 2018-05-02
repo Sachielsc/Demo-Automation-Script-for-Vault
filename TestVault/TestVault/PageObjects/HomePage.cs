@@ -17,12 +17,6 @@ namespace TestVault.PageObjects
         [FindsBy(How = How.CssSelector, Using = "#left-panel > span > i")]
         private IWebElement expandArrow;
 
-		[FindsBy(How = How.CssSelector, Using = "aside#left-panel ul#nav-menu a[title='Risk']")]
-		private IWebElement risk;
-
-		[FindsBy(How = How.LinkText, Using = "Events")]
-		private IWebElement events;
-
 		public HomePage(IWebDriver driver)
         {
             this.driver = driver;
@@ -37,11 +31,7 @@ namespace TestVault.PageObjects
 
 		public EventsPage GoToEventsPage()
 		{
-			expandArrow.Click();
-			wait.Until(ExpectedConditions.ElementToBeClickable(risk));
-			risk.Click();
-			wait.Until(ExpectedConditions.ElementToBeClickable(events));
-			events.Click();
+			driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/incidentManagement/incidentRegisters/index");
 			return new EventsPage(driver);
 		}
 	}
