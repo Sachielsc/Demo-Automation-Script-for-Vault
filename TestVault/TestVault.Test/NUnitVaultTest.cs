@@ -12,6 +12,7 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Chrome;
 using TestVault.Reports;
+using TestVault.PageObjects;
 
 namespace TestVault.Test
 {
@@ -26,7 +27,6 @@ namespace TestVault.Test
         [SetUp]
 		public void Init()
 		{
-		    
             extent = ExtentManager.GetExtent();
             ChromeOptions options = new ChromeOptions();
 			options.AddArguments("--start-maximized");
@@ -37,7 +37,21 @@ namespace TestVault.Test
 		[Test]
 		public void AddAnEventItemViaPortal()
 		{
-		    // put our test case here
+            //Set up the test in ExtentReporter
+		    test = extent.CreateTest("AddAnEventItemViaPortal", "This is an end-to-end test case regarding the adding of an Event via the Portal.");
+            var portalPage = new PageObjects.PortalPage(driver);                    //Add from portal.
+            portalPage.NavigateToPortalPage();
+		    portalPage.ReportAnInjury();                                            //Fill out and save a new report.
+            var loginPage = new LoginPage(driver);
+            loginPage.NavigateToLoginPage();                                        //Login in order to check Event has been added.
+            var homePage = loginPage.LoginWithCredentials("plan.8", "plan01#");
+		    var eventsPage = new EventsPage(driver);                                //Now check if the event has been added.
+            eventsPage.NavigateToEventsPage();
+		    eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
+		    eventsPage.confirmEventAdded(portalPage.GetReferenceID());
+
+		    //Navigate to Events.
+		    //Confirm Event has been added.
 		}
 
 		[Test]
@@ -47,9 +61,6 @@ namespace TestVault.Test
 			TestVault.PageObjects.LoginPage loginPage = new PageObjects.LoginPage(driver);
 			loginPage.NavigateToLoginPage();
 			PageObjects.HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
-
-            // traditional way:
-            // driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/index/hostLogin");
 
 		    // page oriented model:
 		    test = extent.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");

@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="Calculator.cs" />
     <Compile Include="MSTest1.cs" />
+    <Compile Include="PageObjects\EventsPage.cs" />
     <Compile Include="PageObjects\HomePage.cs" />
     <Compile Include="PageObjects\LoginPage.cs" />
     <Compile Include="PageObjects\PortalPage.cs" />

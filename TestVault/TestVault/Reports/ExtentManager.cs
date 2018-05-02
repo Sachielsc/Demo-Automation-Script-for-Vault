@@ -15,11 +15,6 @@ namespace TestVault.Reports
         private static ExtentReports extent;
         private static ExtentTest test;
         private static ExtentHtmlReporter htmlReporter;
-        //"C:\\Users\\Admin\\Documents\\Code\\VaultAutomation\\TestVault\\TestVault\\Reports\\Test.html";//Directory.GetCurrentDirectory() + "extentreport.html"
-
-
-
-
         public static ExtentReports GetExtent()
         {
             if (extent != null)
@@ -38,8 +33,6 @@ namespace TestVault.Reports
 
         private static ExtentHtmlReporter getHtmlReporter()
         {
-
-
             string path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
             string actualPath = path.Substring(0, path.LastIndexOf("bin"));
             string projectPath = new Uri(actualPath).LocalPath;
