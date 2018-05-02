@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Web;
 using System.Net;
 using AventStack.ExtentReports;
+using AventStack.ExtentReports.Reporter;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -28,14 +29,34 @@ namespace TestVault.Test
         [SetUp]
 		public void Init()
 		{
-            extent = ExtentManager.GetExtent();
+            //extent = ExtentManager.GetExtent();
             ChromeOptions options = new ChromeOptions();
 			options.AddArguments("--start-maximized");
 			options.AddArguments("disable-infobars");
 			driver = new ChromeDriver(options);
-		}
 
-		[Test]
+
+
+
+            //#############################################################////////////////////////////////
+		    var dir = TestContext.CurrentContext.TestDirectory + "\\";
+		    var fileName = "Extent.html";
+		    var htmlReporter = new ExtentHtmlReporter(dir + fileName);
+
+		    extent = new ExtentReports();
+		    extent.AddSystemInfo("Tester", "Malachi McIntosh");
+		    extent.AddSystemInfo("Tester", "Charles Shu");
+            extent.AddSystemInfo("OS", "Windows 10");
+		    extent.AddSystemInfo("Browser", "Google Chrome");
+		    extent.AddSystemInfo("Date/Time", new DateTime().ToString());
+            extent.AttachReporter(htmlReporter);
+		    //#############################################################\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+        }
+
+        [Test]
 		public void AddAnEventItemViaPortal()
 		{
             //Set up the test in ExtentReporter
@@ -50,7 +71,7 @@ namespace TestVault.Test
             eventsPage.NavigateToEventsPage();
 		    eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
 		    eventsPage.confirmEventAdded(portalPage.GetReferenceID());
-
+            
 		    //Navigate to Events.
 		    //Confirm Event has been added.
 		}
@@ -83,6 +104,7 @@ namespace TestVault.Test
 		[TearDown]
 		public void CleanUp()
 		{
+            extent.Flush();
 			log.Info("Test Completed!");
 			driver.Quit();
 		}
