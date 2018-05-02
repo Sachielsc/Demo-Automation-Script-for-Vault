@@ -81,6 +81,7 @@ namespace TestVault.PageObjects
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
             string[] actual =
             {
+
                 rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,//ID
                 //rowData[2].Text,                                                    //Subject
                 //rowData[3].Text,                                                    //Date
@@ -153,8 +154,8 @@ namespace TestVault.PageObjects
 
         private ReadOnlyCollection<IWebElement> GetRowItems(IWebElement tableRow)
         {
-
-            return tableRow.FindElements(By.TagName("td")); ;
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.TagName("td")));
+            return tableRow.FindElements(By.TagName("td"));
         }
     }
 }

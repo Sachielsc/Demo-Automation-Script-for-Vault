@@ -8,6 +8,7 @@ using System.Web;
 using System.Net;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
+using AventStack.ExtentReports.Reporter.Configuration;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -39,16 +40,21 @@ namespace TestVault.Test
 
 
             //#############################################################////////////////////////////////
-		    var dir = TestContext.CurrentContext.TestDirectory + "\\";
+		    var dir = "..\\TestVault\\TestVault\\Reports/";
 		    var fileName = "Extent.html";
 		    var htmlReporter = new ExtentHtmlReporter(dir + fileName);
+		    htmlReporter.Configuration().Theme = Theme.Dark;
+		    htmlReporter.Configuration().ChartLocation = ChartLocation.Top;
+		    htmlReporter.Configuration().ChartVisibilityOnOpen = true;
+		    htmlReporter.Configuration().DocumentTitle = "Extent/Vault Automation";
+		    htmlReporter.Configuration().ReportName = "Extent/Add an Event";
 
-		    extent = new ExtentReports();
+            extent = new ExtentReports();
 		    extent.AddSystemInfo("Tester", "Malachi McIntosh");
 		    extent.AddSystemInfo("Tester", "Charles Shu");
             extent.AddSystemInfo("OS", "Windows 10");
 		    extent.AddSystemInfo("Browser", "Google Chrome");
-		    extent.AddSystemInfo("Date/Time", new DateTime().ToString());
+		    extent.AddSystemInfo("Date/Time", DateTime.Now.ToString());
             extent.AttachReporter(htmlReporter);
 		    //#############################################################\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -61,19 +67,23 @@ namespace TestVault.Test
 		{
             //Set up the test in ExtentReporter
 		    test = extent.CreateTest("AddAnEventItemViaPortal", "This is an end-to-end test case regarding the adding of an Event via the Portal.");
-            var portalPage = new PageObjects.PortalPage(driver);                    //Add from portal.
-            portalPage.NavigateToPortalPage();
-		    portalPage.ReportAnInjury();                                            //Fill out and save a new report.
+		    test.Info("Navigated to portal page.");
+		    var portalPage = new PageObjects.PortalPage(driver);                    //Add from portal.
+		    portalPage.NavigateToPortalPage();
+            portalPage.ReportAnInjury();                                            //Fill out and save a new report.
+		    test.Info("Filled out report an injury");
             var loginPage = new LoginPage(driver);
             loginPage.NavigateToLoginPage();                                        //Login in order to check Event has been added.
-            var homePage = loginPage.LoginWithCredentials("plan.8", "plan01#");
-		    var eventsPage = new EventsPage(driver);                                //Now check if the event has been added.
-            eventsPage.NavigateToEventsPage();
-		    eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
-		    eventsPage.confirmEventAdded(portalPage.GetReferenceID());
-            
-		    //Navigate to Events.
-		    //Confirm Event has been added.
+            test.Info("Navigated to login page.");
+		    var homePage = loginPage.LoginWithCredentials("plan.8", "plan01#");
+		    test.Info("Submitted login details");
+            var eventsPage = new EventsPage(driver);                                //Now check if the event has been added.
+		    eventsPage.NavigateToEventsPage();
+		    test.Info("Navigated to Events page");
+            eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
+		    test.Info("Searched for reference");
+		    eventsPage.confirmEventAdded(portalPage.GetReferenceID());              //Confirm Event has been added.
+		    test.Pass("Event successfully added");
 		}
 
 		[Test]
