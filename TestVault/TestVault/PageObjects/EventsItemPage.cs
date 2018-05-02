@@ -15,11 +15,35 @@ namespace TestVault.PageObjects
 		private IWebDriver driver;
 		private WebDriverWait wait;
 
-		//[FindsBy(How = How.CssSelector, Using = "h4.panel-title a:nth-of-type(1)")]
-		//private IWebElement typeOfEvent;
-
 		[FindsBy(How = How.CssSelector, Using = "input#edit-caseno")]
 		private IWebElement caseNumber;
+
+		[FindsBy(How = How.CssSelector, Using = "a[data-url='/incidentManagement/incidents/injuryDetails']")]
+		private IWebElement incidentManagementTag;
+
+		[FindsBy(How = How.CssSelector, Using = "textarea#i_injry_description")]
+		private IWebElement injuryDescription;
+
+		[FindsBy(How = How.CssSelector, Using = "a[data-url='/incidentManagement/incidents/investigationReview']")]
+		private IWebElement standardInvestigationTag;
+
+		[FindsBy(How = How.CssSelector, Using = "input#inv_person")]
+		private IWebElement investigator;
+
+		[FindsBy(How = How.CssSelector, Using = "input#invdate")]
+		private IWebElement dateAssigned;
+
+		[FindsBy(How = How.CssSelector, Using = "input#revdate")]
+		private IWebElement dateDue;
+
+		[FindsBy(How = How.CssSelector, Using = "div#event-register-ajax-container>div.row>div button:nth-of-type(2)")]  /* tip: nth of type or child */
+		private IWebElement saveToEventsButton;
+
+		[FindsBy(How = How.CssSelector, Using = "input#reporterech")]
+		private IWebElement reporterName;
+
+		[FindsBy(How = How.CssSelector, Using = "input#person_involved")]
+		private IWebElement personInvolvedName;
 
 		public EventsItemPage(IWebDriver driver)
 		{
@@ -36,6 +60,7 @@ namespace TestVault.PageObjects
 
 		public void InputMandatoryValues()
 		{
+			// event details
 			caseNumber.Clear();
 			caseNumber.SendKeys("whatever");
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
@@ -43,6 +68,39 @@ namespace TestVault.PageObjects
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");
 
+			// correct bugs (TODO: can be deleted after this bug is fixed)
+			SelectElement personReporting = new SelectElement(driver.FindElement(By.Id("e_i_reported_type")));
+			personReporting.SelectByText("Worker");
+
+			reporterName.Clear();
+			reporterName.SendKeys("Jack Brazier");
+			wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Jack Brazier")));
+			driver.FindElement(By.PartialLinkText("Jack Brazier")).Click();
+			SelectElement personInvolved = new SelectElement(driver.FindElement(By.Id("e_pInvolvedType")));
+			personInvolved.SelectByText("Worker");
+			personInvolvedName.Clear();
+			personInvolvedName.SendKeys("Jack Brazier");
+			wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Jack Brazier")));
+			driver.FindElement(By.PartialLinkText("Jack Brazier")).Click();
+
+			// injury details
+			incidentManagementTag.Click();
+			wait.Until(ExpectedConditions.ElementToBeClickable(injuryDescription));
+			injuryDescription.Clear();
+			injuryDescription.SendKeys("Whatever Description");
+
+			// standard investigation
+			standardInvestigationTag.Click();
+			wait.Until(ExpectedConditions.ElementToBeClickable(investigator));
+			investigator.Clear();
+			investigator.SendKeys("Jack Brazier");
+			wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Jack Brazier")));
+			driver.FindElement(By.PartialLinkText("Jack Brazier")).Click();
+			dateAssigned.Clear();
+			dateAssigned.SendKeys("02/05/2018");
+			dateDue.Clear();
+			dateDue.SendKeys("02/05/2018");
+			saveToEventsButton.Click();
 		}
 	}
 }

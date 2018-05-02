@@ -84,7 +84,7 @@ namespace TestVault.Test
 		public void CleanUp()
 		{
 			log.Info("Test Completed!");
-			driver.Quit();
+			// driver.Quit();
 		}
 	}
 }
