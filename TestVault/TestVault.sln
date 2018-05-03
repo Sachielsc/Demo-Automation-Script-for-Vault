@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVault", "TestVault\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVault.Test", "TestVault.Test\TestVault.Test.csproj", "{FF88B42F-C015-4349-8BA4-B8FB46315E97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVault.Spec", "TestVault.Spec\TestVault.Spec.csproj", "{8563864B-2697-4D05-BED9-791D85783CAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{FF88B42F-C015-4349-8BA4-B8FB46315E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF88B42F-C015-4349-8BA4-B8FB46315E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF88B42F-C015-4349-8BA4-B8FB46315E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8563864B-2697-4D05-BED9-791D85783CAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8563864B-2697-4D05-BED9-791D85783CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8563864B-2697-4D05-BED9-791D85783CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8563864B-2697-4D05-BED9-791D85783CAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
