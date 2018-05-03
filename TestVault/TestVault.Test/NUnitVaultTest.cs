@@ -10,7 +10,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using TestVault.PageObjects;
 using TestVault.Reports;
-using TestVault.PageObjects;
 
 namespace TestVault.Test
 {
@@ -70,7 +69,7 @@ namespace TestVault.Test
 				try
 				{
 					// Confirm Event has been added.
-					eventsPage.confirmEventAdded(portalPage.GetReferenceID());
+					eventsPage.ConfirmEventAdded(portalPage.GetReferenceID());
 					ReportLog.Pass("AddAnEventItemViaPortal Test Passed.");
 				}
 				catch (AssertionException a)
@@ -94,39 +93,50 @@ namespace TestVault.Test
 		{
 			// Set up the test in ReportLog wrapper class.
 			ReportLog.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");
-			// Log in.
-			LoginPage loginPage = new LoginPage(driver);
-			loginPage.NavigateToLoginPage();
-			ReportLog.Log("Navigated to Login Page.");
-			loginPage.TypeUserName("plan.6");
-			loginPage.TypePassword("plan01#");
-			ReportLog.Log("Entered credentials.");
 
-			// Go to home page.
-			HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
-			homePage.WaitUntilHomePageLoadingComplete();
-			ReportLog.Log("Login confirmed and redirected back to Home Page.");
+			try
+			{
+				// Log in.
+				LoginPage loginPage = new LoginPage(driver);
+				loginPage.NavigateToLoginPage();
+				ReportLog.Log("Navigated to Login Page.");
+				loginPage.TypeUserName("plan.6");
+				loginPage.TypePassword("plan01#");
+				ReportLog.Log("Entered credentials.");
 
-			// Go to events page
-			EventsPage eventsPage = homePage.GoToEventsPage();
-			eventsPage.WaitUntilEventsPageLoadingComplete();
-			ReportLog.Log("Navigated to Events Page.");
+				// Go to home page.
+				HomePage homePage = loginPage.ConfirmLoginAndGoBackToHomePage();
+				homePage.WaitUntilHomePageLoadingComplete();
+				ReportLog.Log("Login confirmed and redirected back to Home Page.");
 
-			// go to event item page of a specific item
-			EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
-			eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
+				// Go to events page
+				EventsPage eventsPage = homePage.GoToEventsPage();
+				eventsPage.WaitUntilEventsPageLoadingComplete();
+				ReportLog.Log("Navigated to Events Page.");
 
-			// input mandatory values, save changes and extract item reference ID
-			string referenceID = eventsItemPage.InputMandatoryChangesAndSave().Substring(13);
-			eventsPage.SearchByReferenceID(referenceID);
-			ReportLog.Log("Inputted mandatory fields.");
-			ReportLog.Pass("EditAnEventItem Test Passed.");
+				// go to event item page of a specific item
+				EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
+				eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
 
+				// input mandatory values, save changes and extract item reference ID
+				string referenceID = eventsItemPage.InputMandatoryChangesAndSave().Substring(13);
+				ReportLog.Log("Mandatory fields inputted and changes saved.");
 
+				// search for this specific item
+				eventsPage.SearchByReferenceID(referenceID);
+
+				// assertion
+				eventsPage.ConfirmEventEdited(referenceID);
+				ReportLog.Pass("EditAnEventItem Test Passed.");
+			}
+			catch (Exception e)
+			{
+				// Test failed due to unforeseen exception.
+				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
+				throw e;
+			}
 		}
 	
-
-
 		[TearDown]
 		public void CleanUp()
 		{

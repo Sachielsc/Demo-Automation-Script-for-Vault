@@ -85,9 +85,8 @@ namespace TestVault.PageObjects
         {
             ReportLog.Log(refID);
             searchBar.SendKeys(refID);
-            // TODO Wait for the entire table to have loaded.
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
-            singleRowSearchResult = GetResultOfIDSearch();
+			Task.Delay(3000).Wait();
+			singleRowSearchResult = GetResultOfIDSearch();
         }
 
         private string[] GetResultOfIDSearch()
@@ -119,7 +118,7 @@ namespace TestVault.PageObjects
             return driver.FindElements(By.CssSelector("tbody tr"));
         }
 
-        public void confirmEventAdded(string id)
+        public void ConfirmEventAdded(string id)
         {
             string[] expected =
             {
@@ -140,7 +139,19 @@ namespace TestVault.PageObjects
             }
         }
 
-        private IList<IWebElement> GetRowItems(IWebElement tableRow)
+		public void ConfirmEventEdited(string id)
+		{
+			Assert.AreEqual(id, singleRowSearchResult[0]);
+			ReportLog.Pass("ID matched.");
+			Assert.AreEqual("02/05/2018", singleRowSearchResult[2]);
+			ReportLog.Pass("Date matched.");
+			Assert.AreEqual("Worker", singleRowSearchResult[4]);
+			ReportLog.Pass("Person Type matched.");
+			Assert.AreEqual("Jack Brazier", singleRowSearchResult[5]);
+			ReportLog.Pass("Name matched.");
+		}
+
+		private IList<IWebElement> GetRowItems(IWebElement tableRow)
         {
             //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             IList<IWebElement>  actions = driver.FindElements(By.PartialLinkText("Actions"));
