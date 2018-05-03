@@ -14,6 +14,7 @@ namespace TestVault.PageObjects
     {
 		private IWebDriver driver;
 		private WebDriverWait wait;
+		private string ReferenceID;
 
 		[FindsBy(How = How.CssSelector, Using = "input#edit-caseno")]
 		private IWebElement caseNumber;
@@ -36,7 +37,7 @@ namespace TestVault.PageObjects
 		[FindsBy(How = How.CssSelector, Using = "input#revdate")]
 		private IWebElement dateDue;
 
-		[FindsBy(How = How.CssSelector, Using = "div#event-register-ajax-container>div.row>div button:nth-of-type(2)")]  /* tip: nth of type or child */
+		[FindsBy(How = How.CssSelector, Using = "div#event-register-ajax-container>div.row>div button.btn_save")]  /* tip: nth of type or child */
 		private IWebElement saveToEventsButton;
 
 		[FindsBy(How = How.CssSelector, Using = "input#reporterech")]
@@ -44,6 +45,9 @@ namespace TestVault.PageObjects
 
 		[FindsBy(How = How.CssSelector, Using = "input#person_involved")]
 		private IWebElement personInvolvedName;
+
+		[FindsBy(How = How.CssSelector, Using = "div#ribbon>ol li:nth-of-type(2)")]
+		private IWebElement itemReferenceID;
 
 		public EventsItemPage(IWebDriver driver)
 		{
@@ -58,8 +62,11 @@ namespace TestVault.PageObjects
 			Task.Delay(1000).Wait();  /* tip: implicity wait*/
 		}
 
-		public void InputMandatoryValues()
+		public string InputMandatoryChangesAndSave()
 		{
+			// retrieve item reference ID
+			ReferenceID = itemReferenceID.Text;
+
 			// event details
 			caseNumber.Clear();
 			caseNumber.SendKeys("whatever");
@@ -100,7 +107,12 @@ namespace TestVault.PageObjects
 			dateAssigned.SendKeys("02/05/2018");
 			dateDue.Clear();
 			dateDue.SendKeys("02/05/2018");
+
+			// save changes
 			saveToEventsButton.Click();
+
+			// retrieve item reference ID
+			return ReferenceID;
 		}
 	}
 }

@@ -72,18 +72,21 @@ namespace TestVault.Test
 			EventsPage eventsPage = homePage.GoToEventsPage();
 			eventsPage.WaitUntilEventsPageLoadingComplete();
 
-			// go to event item page
+			// go to event item page of a specific item
 			EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
 			eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
 
-			// input mandatory values
-			eventsItemPage.InputMandatoryValues();
+			// input mandatory values, save changes and extract item reference ID
+			string referenceID = eventsItemPage.InputMandatoryChangesAndSave().Substring(13);
+			eventsPage.SearchByReferenceID(referenceID);
+
+
 		}
 
 		[TearDown]
 		public void CleanUp()
 		{
-			log.Info("Test Completed!");
+			log.Info("nothing");
 			// driver.Quit();
 		}
 	}

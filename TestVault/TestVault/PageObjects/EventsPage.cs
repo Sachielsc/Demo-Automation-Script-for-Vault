@@ -63,25 +63,25 @@ namespace TestVault.PageObjects
         public void SearchByReferenceID(string refID)
         {
             searchBar.SendKeys(refID);
-            singleRowSearchResult = GetResultOfIDSearch();
+			singleRowSearchResult = GetResultOfIDSearch();
         }
 
         private string[] GetResultOfIDSearch()
         {
-            //var numberOfRows = GetTableRows().Count;
-            //if (numberOfRows != 1)
-            //{
-            //    throw new Exception("There should only ever be one result when searching on an ID.\n" + 
-            //                        "There are " + numberOfRows + " rows.");
-            //}
+			//var numberOfRows = GetTableRows().Count;
+			//if (numberOfRows != 1)
+			//{
+			//    throw new Exception("There should only ever be one result when searching on an ID.\n" + 
+			//                        "There are " + numberOfRows + " rows.");
+			//}
 
 
-            var rowData = GetRowItems(GetTableRows()[0]);
+			IList<IWebElement> rowData = GetRowItems(GetTableRows().ElementAtOrDefault(0));
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
             string[] actual =
             {
-                rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,//ID
+                rowData.ElementAtOrDefault(0).FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,//ID
                 //rowData[2].Text,                                                    //Subject
                 //rowData[3].Text,                                                    //Date
                 //rowData[4].Text,                                                    //Event Type
@@ -96,7 +96,7 @@ namespace TestVault.PageObjects
         }
 
 
-        public ReadOnlyCollection<IWebElement> GetTableRows()
+        public IList<IWebElement> GetTableRows()
         {
 			wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("tbody tr")));
             return driver.FindElements(By.CssSelector("tbody tr"));
@@ -151,9 +151,8 @@ namespace TestVault.PageObjects
             //Assert.AreEqual(rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text, "Not Started");
         }
 
-        private ReadOnlyCollection<IWebElement> GetRowItems(IWebElement tableRow)
+        private IList<IWebElement> GetRowItems(IWebElement tableRow)
         {
-
             return tableRow.FindElements(By.TagName("td")); ;
         }
     }
