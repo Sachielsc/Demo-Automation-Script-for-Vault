@@ -201,6 +201,10 @@ project.lock.json
 # Rider
 .idea/
 
+# Reports
+TestVault/Reports/*.html
+TestVault/Reports/ErrorScreenshots/*
+
 # Output folder used by Webpack or other FE stuff
 **/node_modules/*
 **/wwwroot/*
