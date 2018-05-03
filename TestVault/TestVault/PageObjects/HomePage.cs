@@ -9,7 +9,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace TestVault.PageObjects
 {
-    class HomePage
+    public class HomePage
     {
         private IWebDriver driver;
         private WebDriverWait wait;
@@ -17,19 +17,24 @@ namespace TestVault.PageObjects
         [FindsBy(How = How.CssSelector, Using = "#left-panel > span > i")]
         private IWebElement expandArrow;
 
-        [FindsBy(How = How.CssSelector, Using = "#password")]
-        private IWebElement password;
-
-        [FindsBy(How = How.CssSelector, Using = "#login-submit")]
-        private IWebElement loginButton;
-
         public HomePage(IWebDriver driver)
         {
             this.driver = driver;
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
             PageFactory.InitElements(driver, this);
         }
-    }
+
+		public void WaitUntilHomePageLoadingComplete()
+		{
+			wait.Until(ExpectedConditions.ElementToBeClickable(expandArrow));
+		}
+
+		public EventsPage GoToEventsPage()
+		{
+			driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/incidentManagement/incidentRegisters/index");
+			return new EventsPage(driver);
+		}
+	}
 
 
 

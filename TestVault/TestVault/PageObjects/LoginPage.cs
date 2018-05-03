@@ -36,7 +36,15 @@ namespace TestVault.PageObjects
             driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/index/hostLogin");
         }
 
-		public void TypeUserName(string text)
+        public HomePage LoginWithCredentials(string username, string password)
+        {
+            TypeUserName(username);
+            TypePassword(password);
+            clickLoginButton();
+            return new HomePage(driver);
+        }
+
+        public void TypeUserName(string text)
 		{
 			wait.Until(ExpectedConditions.ElementToBeClickable(loginButton));
 			userName.SendKeys(text);
@@ -45,6 +53,20 @@ namespace TestVault.PageObjects
 		public void TypePassword(string text)
 		{
 			passWord.SendKeys(text);
+		}
+
+        public void clickLoginButton()
+        {
+            wait.Until(ExpectedConditions.ElementToBeClickable(loginButton));
+            loginButton.Click();
+        }
+
+
+        public HomePage ConfirmLoginAndGoBackToHomePage()
+		{
+			wait.Until(ExpectedConditions.ElementToBeClickable(loginButton));
+			clickLoginButton();
+			return new HomePage(driver);
 		}
 	}
 }
