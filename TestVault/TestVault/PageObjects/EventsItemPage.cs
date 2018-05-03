@@ -7,6 +7,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
 using TestVault.PageObjects;
+using NUnit.Framework;
+using TestVault.Reports;
 
 namespace TestVault.PageObjects
 {
@@ -62,15 +64,27 @@ namespace TestVault.PageObjects
 			Task.Delay(1000).Wait();  /* tip: implicity wait*/
 		}
 
+		public void InputAssert(string expectedInput, IWebElement actualInputFromWebElement)
+		{
+			Task.Delay(200).Wait();
+			Assert.AreEqual(expectedInput, actualInputFromWebElement.GetAttribute("value"));
+			ReportLog.Pass("The input '" + expectedInput + "' has been verified.");
+		}
+
 		public string InputMandatoryChangesAndSave()
 		{
 			// retrieve item reference ID
 			ReferenceID = itemReferenceID.Text;
 
+			// input
+			string caseNumberInput = "whatever";
+
 			// event details
 			caseNumber.Clear();
-			caseNumber.SendKeys("whatever");
+			caseNumber.SendKeys(caseNumberInput);
+			InputAssert(caseNumberInput, caseNumber);
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
+			Task.Delay(400).Wait();
 			category.SelectByText("Strain");
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");

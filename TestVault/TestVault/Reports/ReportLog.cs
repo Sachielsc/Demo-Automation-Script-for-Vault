@@ -91,7 +91,7 @@ namespace TestVault.Reports
         /// <returns>New HTML Reporter</returns>
         private static ExtentHtmlReporter GetHtmlReporter()
         {
-            var dir = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\TestVault\\TestVault\\Reports/";
+            var dir = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\TestVault\\TestVault\\Reports/"; /* Tips! */
             var fileName = "Extent.html";
             htmlReporter = new ExtentHtmlReporter(dir + fileName);
             htmlReporter.Configuration().ChartVisibilityOnOpen = true;

@@ -142,8 +142,6 @@ namespace TestVault.PageObjects
 		{
 			Assert.AreEqual(id, singleRowSearchResult[0]);
 			ReportLog.Pass("ID matched.");
-			Assert.AreEqual("02/05/2018", singleRowSearchResult[2]);
-			ReportLog.Pass("Date matched.");
 			Assert.AreEqual("Worker", singleRowSearchResult[4]);
 			ReportLog.Pass("Person Type matched.");
 			Assert.AreEqual("Jack Brazier", singleRowSearchResult[5]);
