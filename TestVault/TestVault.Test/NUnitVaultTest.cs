@@ -117,6 +117,7 @@ namespace TestVault.Test
 				// go to event item page of a specific item
 				EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
 				eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
+				ReportLog.Log("Go to the editing page of a specific item");
 
 				// input mandatory values, save changes and extract item reference ID
 				string referenceID = eventsItemPage.InputMandatoryChangesAndSave().Substring(13);
