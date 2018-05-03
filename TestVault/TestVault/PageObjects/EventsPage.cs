@@ -85,6 +85,8 @@ namespace TestVault.PageObjects
         {
             ReportLog.Log(refID);
             searchBar.SendKeys(refID);
+            // TODO Wait for the entire table to have loaded.
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             singleRowSearchResult = GetResultOfIDSearch();
         }
 
@@ -113,7 +115,7 @@ namespace TestVault.PageObjects
 
         public IList<IWebElement> GetTableRows()
         {
-			wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("tbody tr")));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             return driver.FindElements(By.CssSelector("tbody tr"));
         }
 
@@ -140,10 +142,9 @@ namespace TestVault.PageObjects
 
         private IList<IWebElement> GetRowItems(IWebElement tableRow)
         {
-            wait.Until(ExpectedConditions.ElementIsVisible(By.TagName("td"))); 
-
-            //TODO wait for ALL actions to be clickable
-
+            //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
+            IList<IWebElement>  actions = driver.FindElements(By.PartialLinkText("Actions"));
+            wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.PartialLinkText("Actions")));
             return tableRow.FindElements(By.TagName("td"));//TODO get text here
         }
     }

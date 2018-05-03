@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -42,11 +43,11 @@ namespace TestVault.Test
 		[Test]
 		public void AddAnEventItemViaPortal()
 		{
+			// Set up the test in ReportLog wrapper class.
+			ReportLog.CreateTest("AddAnEventItemViaPortal",
+				"This is an end-to-end test case regarding the adding of an Event via the Portal.");
 			try
 			{
-				// Set up the test in ReportLog wrapper class.
-				ReportLog.CreateTest("AddAnEventItemViaPortal",
-					"This is an end-to-end test case regarding the adding of an Event via the Portal.");
 				// Add from portal.
 				var portalPage = new PortalPage(driver);
 				portalPage.NavigateToPortalPage();
@@ -129,8 +130,8 @@ namespace TestVault.Test
 		[TearDown]
 		public void CleanUp()
 		{
-            ReportLog.Flush();
 			driver.Quit();
+            ReportLog.Flush();
 		}
 	}
 }

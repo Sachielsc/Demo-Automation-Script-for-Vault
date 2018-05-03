@@ -24,6 +24,7 @@ namespace TestVault.Reports
         private static ExtentHtmlReporter htmlReporter;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+
         /// <summary>
         /// Log information to the HTML Report and the Log file.
         /// </summary>
@@ -50,6 +51,10 @@ namespace TestVault.Reports
         /// <param name="info">The test result information.</param>
         public static void Fail(string info)
         {
+            if (test == null)
+            {
+                test = CreateTest("FAILED", "TEST NULL");
+            }
             test.Fail(info);
             log.Info("Test failed " + info);
         }
@@ -89,7 +94,7 @@ namespace TestVault.Reports
         /// <returns>New HTML Reporter</returns>
         private static ExtentHtmlReporter GetHtmlReporter()
         {
-            var dir = "..\\TestVault\\TestVault\\Reports/";
+            var dir = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\TestVault\\TestVault\\Reports/";
             var fileName = "Extent.html";
             htmlReporter = new ExtentHtmlReporter(dir + fileName);
             htmlReporter.Configuration().ChartVisibilityOnOpen = true;
@@ -104,6 +109,8 @@ namespace TestVault.Reports
         /// <summary>
         /// Creates a test in the Extent Reporter.
         /// </summary>
+        /// <param name="name">Name of the test</param>
+        /// <param name="description">Description of the test</param>
         public static ExtentTest CreateTest(String name, String description)
         {
             test = GetExtent().CreateTest(name, description);
