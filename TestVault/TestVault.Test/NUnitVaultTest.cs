@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,11 +16,9 @@ using TestVault.PageObjects;
 namespace TestVault.Test
 {
 	/// <summary>
-	/// This is a test fixture containing two test cases related to the Events section of th the Vault Intelligence website.
+	/// This is a test fixture containing two test cases related to the Events section of the Vault Intelligence website.
 	/// </summary>
-	/// <author>
-	/// Malachi McIntosh and Charles Shu 2018
-	/// </author>
+	/// <author>Malachi McIntosh and Charles Shu 2018</author>
 	[TestFixture]
 	public class NUnitVaultTest
 	{
@@ -66,7 +65,7 @@ namespace TestVault.Test
 				eventsPage.NavigateToEventsPage();
 				ReportLog.Log("Navigated to Events page.");
 				eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
-				ReportLog.Log("Searched for reference");
+				ReportLog.Log("Searched for reference ID: " + portalPage.GetReferenceID());
 				try
 				{
 					// Confirm Event has been added.
@@ -75,9 +74,8 @@ namespace TestVault.Test
 				}
 				catch (AssertionException a)
 				{
-					ITakesScreenshot screenshot = (ITakesScreenshot)driver;
-					// Test failed due to assertion error.
-					ReportLog.Fail(a.Message);
+                    // Test failed due to assertion error.
+                    ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
 					throw a;
 				}
 			}
@@ -89,7 +87,17 @@ namespace TestVault.Test
 			}
 		}
 
-		[Test]
+	    public string TakeScreenShot(string filename)
+	    {
+	        ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
+	        Screenshot screenshot = takeScreenshot.GetScreenshot();
+	        string path = AppDomain.CurrentDomain.BaseDirectory;
+	        string finalpath = path + "..\\..\\..\\..\\TestVault\\TestVault\\Reports\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
+	        screenshot.SaveAsFile(finalpath);
+	        return finalpath;
+	    }
+
+	    [Test]
 		public void EditAnEventItem()
 		{
 			// Set up the test in ReportLog wrapper class.

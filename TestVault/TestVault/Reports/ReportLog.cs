@@ -51,22 +51,19 @@ namespace TestVault.Reports
         /// <param name="info">The test result information.</param>
         public static void Fail(string info)
         {
-            if (test == null)
-            {
-                test = CreateTest("FAILED", "TEST NULL");
-            }
             test.Fail(info);
-            log.Info("Test failed " + info);
+            log.Error("Test failed " + info);
         }
 
         /// <summary>
         /// Test failed. Log fail information to the HTML Report and the log file.
         /// </summary>
         /// <param name="info">The test result information.</param>
-        public static void Fail(string info, ITakesScreenshot screenshot)
+        /// <param name="screenshotPath">Path to the screenshot.</param>
+        public static void Fail(string info, string screenshotPath)
         {
-            test.Fail(info);
-            log.Info("Test failed " + info);
+            test.Fail(info, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
+            log.Error("Screen shot at " + screenshotPath);
         }
 
         /// <summary>

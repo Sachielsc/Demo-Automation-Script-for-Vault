@@ -83,10 +83,10 @@ namespace TestVault.PageObjects
 
         public void SearchByReferenceID(string refID)
         {
-            ReportLog.Log(refID);
             searchBar.SendKeys(refID);
             // TODO Wait for the entire table to have loaded.
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
+            //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
+            Task.Delay(3000).Wait(); // TODO cheating!!!
             singleRowSearchResult = GetResultOfIDSearch();
         }
 
@@ -99,7 +99,7 @@ namespace TestVault.PageObjects
 
             string[] actual =
             {
-                rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,    // ID.
+                rowData[0].FindElement(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr/td[1]/a")).Text,    // ID.
                 rowData[2].Text,                                                        // Subject.
                 rowData[3].Text,                                                        // Date.
                 rowData[4].Text,                                                        // Event Type.
@@ -116,7 +116,7 @@ namespace TestVault.PageObjects
         public IList<IWebElement> GetTableRows()
         {
             wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
-            return driver.FindElements(By.CssSelector("tbody tr"));
+            return driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
         }
 
         public void confirmEventAdded(string id)
@@ -135,17 +135,14 @@ namespace TestVault.PageObjects
             };
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(singleRowSearchResult[i], expected[i]);
+                Assert.AreEqual(expected[i], singleRowSearchResult[i]);
                 ReportLog.Pass(" " + labels[i] + " matched.");
             }
         }
 
         private IList<IWebElement> GetRowItems(IWebElement tableRow)
         {
-            //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
-            IList<IWebElement>  actions = driver.FindElements(By.PartialLinkText("Actions"));
-            wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.PartialLinkText("Actions")));
-            return tableRow.FindElements(By.TagName("td"));//TODO get text here
+            return tableRow.FindElements(By.TagName("td"));
         }
     }
 }
