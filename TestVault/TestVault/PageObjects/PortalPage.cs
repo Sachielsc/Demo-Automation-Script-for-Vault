@@ -92,11 +92,8 @@ namespace TestVault.PageObjects
         public void SelectPersonReportingName()
         {
             personReportingName.SendKeys("Charles Worker");
-            //*[@id=\"ui-id-1\"]/li/
             wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Charles Worker")));
             driver.FindElement(By.PartialLinkText("Charles Worker")).Click();
-            //personReportingName.SendKeys(Keys.ArrowDown);
-            //personReportingName.SendKeys(Keys.Enter);
             log.Info("Selected person reporting name as: \"Charles Worker\"");
         }
 
@@ -227,10 +224,10 @@ namespace TestVault.PageObjects
 
         public void ReportAnInjury()
         {
-            ClickReportInjuryArrowButton();              //Report an injury
-            SelectPersonReporting();                     //Select the Worker type
-            SelectPersonReportingName();                 //Select "Charles Worker"
-            ClickPersonInvolved();                       //This fills person involved automatically as above
+            ClickReportInjuryArrowButton();
+            SelectPersonReporting();
+            SelectPersonReportingName();
+            ClickPersonInvolved();                       // This fills person involved automatically as above.
             FillLocationOfEvent("TEST location");
             SetEventDate("02/05/2018");
             SetEventTime("12:05");

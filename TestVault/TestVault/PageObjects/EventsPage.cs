@@ -9,17 +9,35 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
 using TestVault.PageObjects;
 using NUnit.Framework;
+using TestVault.Reports;
 
 namespace TestVault.PageObjects
 {
+    /// <summary>
+    /// This Page Object represents the Events Register Page. It contains Web Elements and methods to interact with them.
+    /// </summary>
+    /// <author>Malachi McIntosh 2018</author>
     public class EventsPage
     {
 		private IWebDriver driver;
 		private WebDriverWait wait;
 		private string[] singleRowSearchResult;
-		private ReadOnlyCollection<IWebElement> multipleRowsSearchResult;
+		private IList<IWebElement> multipleRowsSearchResult;
+        // This "labels" string[] represents (some, not all, of) the column headers of the Events Register table.
+        private string[] labels =
+        {
+            "ID",
+            "Subject",
+            "Date",
+            "Event Type",
+            "Person Type",
+            "Name",
+            "Site",
+            "Pending",
+            "Not Started"
+        };
 
-		[FindsBy(How = How.CssSelector, Using = "tbody div.btn-group-sm>a.btn")]
+        [FindsBy(How = How.CssSelector, Using = "tbody div.btn-group-sm>a.btn")]
 		private IList<IWebElement> actionButtons;
 
 		[FindsBy(How = How.CssSelector, Using = "div.open>ul a[data-action_id='1']")]
@@ -34,7 +52,10 @@ namespace TestVault.PageObjects
 		[FindsBy(How = How.TagName, Using = "#DataTables_Table_0 > tbody")]
 		private IWebElement tableBody;
 
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="driver">WebDriver for this Page Object. Required for the PageFactory to init Elements.</param>
 		public EventsPage(IWebDriver driver)
 		{
 			this.driver = driver;
@@ -62,98 +83,68 @@ namespace TestVault.PageObjects
 
         public void SearchByReferenceID(string refID)
         {
+            ReportLog.Log(refID);
             searchBar.SendKeys(refID);
-			singleRowSearchResult = GetResultOfIDSearch();
+            singleRowSearchResult = GetResultOfIDSearch();
         }
 
         private string[] GetResultOfIDSearch()
         {
-			//var numberOfRows = GetTableRows().Count;
-			//if (numberOfRows != 1)
-			//{
-			//    throw new Exception("There should only ever be one result when searching on an ID.\n" + 
-			//                        "There are " + numberOfRows + " rows.");
-			//}
-
-
-			IList<IWebElement> rowData = GetRowItems(GetTableRows().ElementAtOrDefault(0));
+            var rowData = GetRowItems(GetTableRows()[0]);
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
+            
+
             string[] actual =
             {
-                rowData.ElementAtOrDefault(0).FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,//ID
-                //rowData[2].Text,                                                    //Subject
-                //rowData[3].Text,                                                    //Date
-                //rowData[4].Text,                                                    //Event Type
-                //rowData[6].Text,                                                    //Person Type
-                //rowData[7].Text,                                                    //Name
-                //rowData[8].Text,                                                    //Site
-                //rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,    //Pending
-                //rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text  //Not Started
+                rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,    // ID.
+                rowData[2].Text,                                                        // Subject.
+                rowData[3].Text,                                                        // Date.
+                rowData[4].Text,                                                        // Event Type.
+                rowData[6].Text,                                                        // Person Type.
+                rowData[7].Text,                                                        // Name.
+                rowData[8].Text,                                                        // Site.
+                rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,        // Pending.
+                rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text      // Not Started.
             };
-
             return actual;
         }
 
 
         public IList<IWebElement> GetTableRows()
         {
-			wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("tbody tr")));
+			wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("tbody tr")));
             return driver.FindElements(By.CssSelector("tbody tr"));
         }
 
         public void confirmEventAdded(string id)
         {
-            Assert.AreEqual(singleRowSearchResult[0], id);
-            //var rowData = GetRowItems(singleRowSearchResult);                                            //Site
-
-            //string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
-            //string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
-            //string[] actual =
-            //{
-            //    rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text,//ID
-            //    rowData[2].Text,                                                    //Subject
-            //    rowData[3].Text,                                                    //Date
-            //    rowData[4].Text,                                                    //Event Type
-            //    rowData[6].Text,                                                    //Person Type
-            //    rowData[7].Text,                                                    //Name
-            //    rowData[8].Text,                                                    //Site
-            //    rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,    //Pending
-            //    rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text  //Not Started
-            //};
-
-            //string[] expected =
-            //{
-            //    id,
-            //    "Biological agencies",
-            //    "02/05/2018",
-            //    "Injury",
-            //    "Worker",
-            //    "Charles Worker",
-            //    "Adelaide - Head Office",
-            //    "Pending",
-            //    "Not Started"
-            //};
-            //for (int i = 0; i < expected.Length; i++)
-            //{
-            //    Assert.AreEqual(singleRowSearchResult[i], expected[i]);
-            //}
-            //Assert.AreEqual(rowData[0].FindElement(By.CssSelector("a[href^=\"#!view-\"]")).Text, id);               //ID
-            //Assert.AreEqual(rowData[2].Text, "Biological agencies");                                                //Subject
-            //Assert.AreEqual(rowData[3].Text, "02/05/2018");                                                         //Date
-            //Assert.AreEqual(rowData[4].Text, "Injury");                                                             //Event Type
-            //Assert.AreEqual(rowData[6].Text, "Worker");                                                             //Person Type
-            //Assert.AreEqual(rowData[7].Text, "Charles Worker");                                                     //Name
-            //Assert.AreEqual(rowData[8].Text, "Adelaide - Head Office");                                            //Site
-            //string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
-            //string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
-            //Assert.AreEqual(rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text, "Pending");
-            //Assert.AreEqual(rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text, "Not Started");
+            string[] expected =
+            {
+                id,
+                "Biological agencies",
+                "02/05/2018",
+                "Injury",
+                "Worker",
+                "Charles Worker",
+                "Adelaide - Head Office",
+                "Pending",
+                "Not Started"
+            };
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(singleRowSearchResult[i], expected[i]);
+                ReportLog.Pass(" " + labels[i] + " matched.");
+            }
         }
 
         private IList<IWebElement> GetRowItems(IWebElement tableRow)
         {
-            return tableRow.FindElements(By.TagName("td")); ;
+            wait.Until(ExpectedConditions.ElementIsVisible(By.TagName("td"))); 
+
+            //TODO wait for ALL actions to be clickable
+
+            return tableRow.FindElements(By.TagName("td"));//TODO get text here
         }
     }
 }
