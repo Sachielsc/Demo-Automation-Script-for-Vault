@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -84,8 +85,17 @@ namespace TestVault.PageObjects
         public void SearchByReferenceID(string refID)
         {
             searchBar.SendKeys(refID);
-			Task.Delay(3000).Wait();
-			singleRowSearchResult = GetResultOfIDSearch();
+            wait.Until(ExpectedConditions.TextToBePresentInElementValue(searchBar, refID));
+            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div > vault-loader")));
+            IList<IWebElement> rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            while (rows.Count > 1)
+            {
+                rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            }
+
+
+            //Task.Delay(1250).Wait();
+            singleRowSearchResult = GetResultOfIDSearch();
         }
 
         private string[] GetResultOfIDSearch()

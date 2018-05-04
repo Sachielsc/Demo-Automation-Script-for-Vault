@@ -71,14 +71,14 @@ namespace TestVault.PageObjects
         [FindsBy(How = How.CssSelector, Using = "#whatActionTaken")]
         private IWebElement initialActionsTextBox;
 
-        [FindsBy(How = How.CssSelector, Using = "#respiratory > label > input")]
-        private IWebElement respiratoryRadioButton;
+        [FindsBy(How = How.CssSelector, Using = "#respiratory")]
+        private IWebElement respiratoryRadioButtonLink;
 
-        [FindsBy(How = How.XPath, Using = "//*[@id=\"body-area-data-table\"]/tbody/tr[2]/td/span")]
-        private IWebElement brainBodyArea;
+        [FindsBy(How = How.CssSelector, Using = "#body-area-data-table > tbody > tr.even")]
+        private IWebElement mouthBodyArea;
 
-        [FindsBy(How = How.CssSelector, Using = "#illness-body-part-data-table > tbody > tr.even > td > a")]
-        private IWebElement concussionAilment;
+        [FindsBy(How = How.CssSelector, Using = "#illness-body-part-data-table > tbody > tr.odd > td > a")]
+        private IWebElement burnAilment;
 
         [FindsBy(How = How.CssSelector, Using = "#report-item-form > div > div > div > div:nth-child(5) > div > button.btn.btn-primary.save_btn.pull-left")]
         private IWebElement saveButton;
@@ -95,6 +95,7 @@ namespace TestVault.PageObjects
             personReportingSelectElement.SelectByIndex(1);
             Assert.AreEqual("Worker", personReportingSelectElement.SelectedOption.Text);
             ReportLog.Log("Selected Person Reporting as " + personReportingSelectElement.SelectedOption.Text);
+            
         }
 
         public void SelectPersonReportingName()
@@ -113,6 +114,7 @@ namespace TestVault.PageObjects
             personInvolvedSelect.Click();
             Assert.AreEqual("Employee", personInvolvedSelect.GetAttribute("value"));
             ReportLog.Log("Clicked the person involved select element.");
+            
         }
 
         public void ClickSensitiveEvent()
@@ -160,6 +162,8 @@ namespace TestVault.PageObjects
 
         public void FillLocationOfEvent(string location)
         {
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#location")));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#location")));
             locationOfEvent.SendKeys(location);
             wait.Until(ExpectedConditions.TextToBePresentInElementValue(locationOfEvent, location));
             Assert.AreEqual(location, locationOfEvent.GetAttribute("value"));
@@ -168,20 +172,20 @@ namespace TestVault.PageObjects
 
         public void ClickRespiratoryRadioButton()
         {
-            ReportLog.Log("########################### BEFORE" + respiratoryRadioButton.Selected.ToString());
-            respiratoryRadioButton.Click();
-            ReportLog.Log("########################### AFTER" + respiratoryRadioButton.Selected.ToString());
-            wait.Until(ExpectedConditions.ElementToBeSelected(respiratoryRadioButton));
-            Assert.True(respiratoryRadioButton.Selected);
+            respiratoryRadioButtonLink.Click();
+            wait.Until(ExpectedConditions.ElementIsVisible(
+                By.CssSelector("#body-area-data-table > tbody > tr.odd.active > td")));
+            IWebElement lungs = driver.FindElement(By.CssSelector("#body-area-data-table > tbody > tr.odd.active > td"));
+            Assert.AreEqual("Lungs", lungs.Text);
             ReportLog.Log("Clicked respiratory radio button");
         }
 
-        public void ClickConcussionAilment()
+        public void ClickBurnAilment()
         {
-            concussionAilment.Click();
-            var concussion = driver.FindElement(By.CssSelector("# detail_desc_table > tbody > tr > td:nth-child(4)")).Text;
-            Assert.AreEqual("Concussion", concussion);
-            ReportLog.Log("Clicked concussion ailment");
+            burnAilment.Click();
+            var burn = driver.FindElement(By.CssSelector("#detail_desc_table > tbody > tr > td:nth-child(4)")).Text;
+            Assert.AreEqual("Burn", burn);
+            ReportLog.Log("Clicked burn ailment");
         }
 
         public void SetEventDate(string date)
@@ -212,8 +216,8 @@ namespace TestVault.PageObjects
         {
             saveButton.Click();
             wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("#vaultModal > div > div > div.modal-header > h4")));
-            string success = driver.FindElement(By.CssSelector("# vaultModal > div > div > div.modal-body > p")).Text;
-            Assert.AreEqual(success, "Thank you for submitting this event. Your Item Reference is:");
+            string success = driver.FindElement(By.CssSelector("#vaultModal > div > div > div.modal-body > p")).Text;
+            Assert.AreEqual("Thank you for submitting this event. Your Item Reference is:", success.Substring(0,60));
             ReportLog.Log("Clicked save button.");
             referenceID = referenceIDElement.Text;
         }
@@ -232,11 +236,11 @@ namespace TestVault.PageObjects
             ReportLog.Log("Filled what intial actions as: " + text);
         }
 
-        public void ClickBrainBodyArea()
+        public void ClickMouthBodyArea()
         {
-            brainBodyArea.Click();
-            Assert.AreEqual("even active", brainBodyArea.GetAttribute("class"));
-            ReportLog.Log("Clicked brain body area");
+            mouthBodyArea.Click();
+            Assert.AreEqual("even active", mouthBodyArea.GetAttribute("class"));
+            ReportLog.Log("Clicked mouth body area");
         }
         
         public PortalPage(IWebDriver driver)
@@ -272,8 +276,8 @@ namespace TestVault.PageObjects
             FillWhoElseWasInvolved("TEST who else was involved");
             FillInitialActions("TEST initial actions");
             ClickRespiratoryRadioButton();
-            ClickBrainBodyArea();
-            ClickConcussionAilment();
+            ClickMouthBodyArea();
+            ClickBurnAilment();
             ClickSaveButton();
             ReportLog.Log("Filled out report an injury.");
         }

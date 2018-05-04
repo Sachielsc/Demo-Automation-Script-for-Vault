@@ -77,14 +77,15 @@ namespace TestVault.Reports
 			try
 			{
 				Assert.AreEqual(expectedInput, actualInputFromWebElement.GetAttribute("value"));
+			    Pass("The input '" + expectedInput + "' has been verified.");
 			}
 			catch (AssertionException a)
 			{
 				// Test failed due to assertion error.
-				ReportLog.Fail(a.Message, TakeScreenShot(testCase, driver));
+				Fail(a.Message, TakeScreenShot(testCase, driver));
 				throw a;
 			}
-			Pass("The input '" + expectedInput + "' has been verified.");
+
 		}
 
         /// <summary>
@@ -156,7 +157,7 @@ namespace TestVault.Reports
         /// </summary>
         public static void Flush()
         {
-            Log("All test runs completed.");
+            Log("Test case completed.");
             GetExtent().Flush();
         }
 
