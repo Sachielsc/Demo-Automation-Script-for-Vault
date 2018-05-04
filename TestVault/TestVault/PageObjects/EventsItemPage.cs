@@ -75,7 +75,7 @@ namespace TestVault.PageObjects
 			// event details
 			caseNumber.Clear();
 			caseNumber.SendKeys(caseNumberInput);
-			ReportLog.InputAssert(caseNumberInput, caseNumber);
+			ReportLog.InputAssert(caseNumberInput, caseNumber, driver, "EditEvent");
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
 			Task.Delay(400).Wait();
 			category.SelectByText("Strain");

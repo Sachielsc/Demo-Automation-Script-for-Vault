@@ -71,7 +71,7 @@ namespace TestVault.Reports
 		/// <summary>
 		/// The input assertion method
 		/// </summary>
-		public static void InputAssert(string expectedInput, IWebElement actualInputFromWebElement)
+		public static void InputAssert(string expectedInput, IWebElement actualInputFromWebElement, IWebDriver driver, string testCase)
 		{
 			Task.Delay(200).Wait();
 			try
@@ -81,17 +81,33 @@ namespace TestVault.Reports
 			catch (AssertionException a)
 			{
 				// Test failed due to assertion error.
-				ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
+				ReportLog.Fail(a.Message, TakeScreenShot(testCase, driver));
 				throw a;
 			}
 			Pass("The input '" + expectedInput + "' has been verified.");
 		}
 
-		/// <summary>
-		/// Get the Extent Reporter. If one does not exist, create and return one.
-		/// </summary>
-		/// <returns>The Extent Reporter</returns>
-		public static ExtentReports GetExtent()
+        /// <summary>
+        /// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
+        /// </summary>
+        /// <param name="filename">The name of the file</param>
+        /// <returns>The path to the screenshot</returns>
+        public static string TakeScreenShot(string filename, IWebDriver driver)
+        {
+            ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
+            Screenshot screenshot = takeScreenshot.GetScreenshot();
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            string finalpath = path + "..\\..\\..\\..\\TestVault\\TestVault\\Reports\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
+            screenshot.SaveAsFile(finalpath);
+            return finalpath;
+        }
+
+
+        /// <summary>
+        /// Get the Extent Reporter. If one does not exist, create and return one.
+        /// </summary>
+        /// <returns>The Extent Reporter</returns>
+        public static ExtentReports GetExtent()
         {
             if (extent != null)
             {
