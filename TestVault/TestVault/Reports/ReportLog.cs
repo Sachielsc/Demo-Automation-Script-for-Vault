@@ -91,13 +91,20 @@ namespace TestVault.Reports
 		/// <summary>
 		/// The selection assertion method
 		/// </summary>
-		public static void SelectAssert(int expectedInputIndex, SelectElement actualSelectionFromWebElement, IWebDriver driver, string testCase)
+		public static void SelectAssert(string expectedSelectedText, SelectElement actualSelectionFromWebElement, IWebDriver driver, string testCase)
 		{
 			Task.Delay(200).Wait();
 			try
 			{
-				Assert.AreEqual(true, actualSelectionFromWebElement.Options[expectedInputIndex].Selected);
-
+				int index;
+				for (index = 0; index < actualSelectionFromWebElement.Options.Count; index++)
+				{
+					if (expectedSelectedText == actualSelectionFromWebElement.Options[index].Text)
+					{
+						break;
+					}
+				}
+				Assert.AreEqual(true, actualSelectionFromWebElement.Options[index].Selected);
 			}
 			catch (AssertionException a)
 			{
@@ -105,7 +112,7 @@ namespace TestVault.Reports
 				Fail(a.Message, TakeScreenShot(testCase, driver));
 				throw a;
 			}
-			Pass("The input '" + expectedInputIndex + "' has been selected.");
+			Pass("The input '" + expectedSelectedText + "' has been selected.");
 		}
 		/// <summary>
 		/// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
