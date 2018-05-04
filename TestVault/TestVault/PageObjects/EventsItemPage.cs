@@ -76,8 +76,8 @@ namespace TestVault.PageObjects
 
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
 			Task.Delay(400).Wait();
-			category.SelectByIndex(30);
-			ReportLog.SelectAssert("Strain", category, driver, "category selection");
+			category.SelectByText("Strain123123");
+			ReportLog.SelectAssert("Strain123123", category, driver, "category selection");
 
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");
