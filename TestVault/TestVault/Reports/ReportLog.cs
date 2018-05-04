@@ -9,6 +9,7 @@ using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports.Reporter.Configuration;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using TestVault;
 
 namespace TestVault.Reports
@@ -81,18 +82,37 @@ namespace TestVault.Reports
 			catch (AssertionException a)
 			{
 				// Test failed due to assertion error.
-				ReportLog.Fail(a.Message, TakeScreenShot(testCase, driver));
+				Fail(a.Message, TakeScreenShot(testCase, driver));
 				throw a;
 			}
 			Pass("The input '" + expectedInput + "' has been verified.");
 		}
 
-        /// <summary>
-        /// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
-        /// </summary>
-        /// <param name="filename">The name of the file</param>
-        /// <returns>The path to the screenshot</returns>
-        public static string TakeScreenShot(string filename, IWebDriver driver)
+		/// <summary>
+		/// The selection assertion method
+		/// </summary>
+		public static void SelectAssert(int expectedInputIndex, SelectElement actualSelectionFromWebElement, IWebDriver driver, string testCase)
+		{
+			Task.Delay(200).Wait();
+			try
+			{
+				Assert.AreEqual(true, actualSelectionFromWebElement.Options[expectedInputIndex].Selected);
+
+			}
+			catch (AssertionException a)
+			{
+				// Test failed due to assertion error.
+				Fail(a.Message, TakeScreenShot(testCase, driver));
+				throw a;
+			}
+			Pass("The input '" + expectedInputIndex + "' has been selected.");
+		}
+		/// <summary>
+		/// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
+		/// </summary>
+		/// <param name="filename">The name of the file</param>
+		/// <returns>The path to the screenshot</returns>
+		public static string TakeScreenShot(string filename, IWebDriver driver)
         {
             ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
             Screenshot screenshot = takeScreenshot.GetScreenshot();

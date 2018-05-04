@@ -203,7 +203,7 @@ project.lock.json
 
 # Reports
 **/TestVault/Reports/*.html
-**/TestVault/Reports/ErrorScreenshots/
+**/TestVault/Reports/ErrorScreenshots/*
 
 # Output folder used by Webpack or other FE stuff
 **/node_modules/*
