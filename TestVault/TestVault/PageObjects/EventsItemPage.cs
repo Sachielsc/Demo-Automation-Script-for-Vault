@@ -64,13 +64,6 @@ namespace TestVault.PageObjects
 			Task.Delay(1000).Wait();  /* tip: implicity wait*/
 		}
 
-		public void InputAssert(string expectedInput, IWebElement actualInputFromWebElement)
-		{
-			Task.Delay(200).Wait();
-			Assert.AreEqual(expectedInput, actualInputFromWebElement.GetAttribute("value"));
-			ReportLog.Pass("The input '" + expectedInput + "' has been verified.");
-		}
-
 		public string InputMandatoryChangesAndSave()
 		{
 			// retrieve item reference ID
@@ -82,7 +75,7 @@ namespace TestVault.PageObjects
 			// event details
 			caseNumber.Clear();
 			caseNumber.SendKeys(caseNumberInput);
-			InputAssert(caseNumberInput, caseNumber);
+			ReportLog.InputAssert(caseNumberInput, caseNumber);
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
 			Task.Delay(400).Wait();
 			category.SelectByText("Strain");

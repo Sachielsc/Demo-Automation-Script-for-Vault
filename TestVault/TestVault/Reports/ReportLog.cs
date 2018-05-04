@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports.Reporter.Configuration;
+using NUnit.Framework;
 using OpenQA.Selenium;
+using TestVault;
 
 namespace TestVault.Reports
 {
@@ -66,11 +68,30 @@ namespace TestVault.Reports
             log.Error("Screen shot at " + screenshotPath);
         }
 
-        /// <summary>
-        /// Get the Extent Reporter. If one does not exist, create and return one.
-        /// </summary>
-        /// <returns>The Extent Reporter</returns>
-        public static ExtentReports GetExtent()
+		/// <summary>
+		/// The input assertion method
+		/// </summary>
+		public static void InputAssert(string expectedInput, IWebElement actualInputFromWebElement)
+		{
+			Task.Delay(200).Wait();
+			try
+			{
+				Assert.AreEqual(expectedInput, actualInputFromWebElement.GetAttribute("value"));
+			}
+			catch (AssertionException a)
+			{
+				// Test failed due to assertion error.
+				ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
+				throw a;
+			}
+			Pass("The input '" + expectedInput + "' has been verified.");
+		}
+
+		/// <summary>
+		/// Get the Extent Reporter. If one does not exist, create and return one.
+		/// </summary>
+		/// <returns>The Extent Reporter</returns>
+		public static ExtentReports GetExtent()
         {
             if (extent != null)
             {
