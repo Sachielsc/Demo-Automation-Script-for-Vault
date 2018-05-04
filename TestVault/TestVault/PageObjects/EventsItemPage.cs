@@ -69,16 +69,16 @@ namespace TestVault.PageObjects
 			// retrieve item reference ID
 			ReferenceID = itemReferenceID.Text;
 
-			// input
-			string caseNumberInput = "whatever";
-
 			// event details
 			caseNumber.Clear();
-			caseNumber.SendKeys(caseNumberInput);
-			ReportLog.InputAssert(caseNumberInput, caseNumber, driver, "EditEvent");
+			caseNumber.SendKeys("whatever");
+			ReportLog.InputAssert("whatever", caseNumber, driver, "Case Number Input");
+
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
 			Task.Delay(400).Wait();
-			category.SelectByText("Strain");
+			category.SelectByIndex(30);
+			ReportLog.SelectAssert("Strain", category, driver, "category selection");
+
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");
 
@@ -90,6 +90,8 @@ namespace TestVault.PageObjects
 			reporterName.SendKeys("Jack Brazier");
 			wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Jack Brazier")));
 			driver.FindElement(By.PartialLinkText("Jack Brazier")).Click();
+			ReportLog.InputAssert("Jack Brazier", reporterName, driver, "Reporter name input");
+
 			SelectElement personInvolved = new SelectElement(driver.FindElement(By.Id("e_pInvolvedType")));
 			personInvolved.SelectByText("Worker");
 			personInvolvedName.Clear();
