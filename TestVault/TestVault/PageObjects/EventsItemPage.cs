@@ -7,6 +7,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
 using TestVault.PageObjects;
+using NUnit.Framework;
+using TestVault.Reports;
 
 namespace TestVault.PageObjects
 {
@@ -67,10 +69,15 @@ namespace TestVault.PageObjects
 			// retrieve item reference ID
 			ReferenceID = itemReferenceID.Text;
 
+			// input
+			string caseNumberInput = "whatever";
+
 			// event details
 			caseNumber.Clear();
-			caseNumber.SendKeys("whatever");
+			caseNumber.SendKeys(caseNumberInput);
+			ReportLog.InputAssert(caseNumberInput, caseNumber);
 			SelectElement category = new SelectElement(driver.FindElement(By.Id("category")));
+			Task.Delay(400).Wait();
 			category.SelectByText("Strain");
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");
