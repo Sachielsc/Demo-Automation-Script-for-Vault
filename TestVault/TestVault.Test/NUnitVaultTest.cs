@@ -71,7 +71,7 @@ namespace TestVault.Test
 				catch (AssertionException a)
 				{
                     // Test failed due to assertion error.
-                    ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
+                    ReportLog.Fail(a.Message, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
 					throw a;
 				}
 			}
@@ -82,21 +82,6 @@ namespace TestVault.Test
 				throw e;
 			}
 		}
-
-        /// <summary>
-        /// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
-        /// </summary>
-        /// <param name="filename">The name of the file</param>
-        /// <returns>The path to the screenshot</returns>
-	    public string TakeScreenShot(string filename)
-	    {
-	        ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
-	        Screenshot screenshot = takeScreenshot.GetScreenshot();
-	        string path = AppDomain.CurrentDomain.BaseDirectory;
-	        string finalpath = path + "..\\..\\..\\..\\TestVault\\TestVault\\Reports\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
-	        screenshot.SaveAsFile(finalpath);
-	        return finalpath;
-	    }
 
         /// <summary>
         /// This is an end-to-end test case for editing an event from the Events register.
@@ -147,7 +132,7 @@ namespace TestVault.Test
 			    catch (AssertionException a)
 			    {
 			        // Test failed due to assertion error.
-			        ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
+			        ReportLog.Fail(a.Message, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
                 }
 
 			    
@@ -156,7 +141,7 @@ namespace TestVault.Test
 			{
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
-                ReportLog.Fail("UnforeseenException",TakeScreenShot("UnforeseenException"));
+                ReportLog.Fail("UnforeseenException", ReportLog.TakeScreenShot("UnforeseenException", driver));
 				throw e;
 			}
 		}
