@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using OpenQA.Selenium.Support.UI;
+using TestVault.Reports;
 
 namespace TestVault.PageObjects
 {
@@ -15,6 +17,11 @@ namespace TestVault.PageObjects
         private IWebDriver driver;
         private WebDriverWait wait;
         private string referenceID;
+
+        public const string Url = "https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO";
+
+        public const string ReportInjuryUrl =
+            "https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO#!report-injury";
 
         [FindsBy(How = How.CssSelector, Using = "#content > div:nth-child(2) > div:nth-child(1) > div > span > a > i")]
         private IWebElement reportInjuryArrowButton;
@@ -64,7 +71,7 @@ namespace TestVault.PageObjects
         [FindsBy(How = How.CssSelector, Using = "#whatActionTaken")]
         private IWebElement initialActionsTextBox;
 
-        [FindsBy(How = How.CssSelector, Using = "#respiratory")]
+        [FindsBy(How = How.CssSelector, Using = "#respiratory > label > input")]
         private IWebElement respiratoryRadioButton;
 
         [FindsBy(How = How.XPath, Using = "//*[@id=\"body-area-data-table\"]/tbody/tr[2]/td/span")]
@@ -86,135 +93,164 @@ namespace TestVault.PageObjects
         {
             var personReportingSelectElement = new SelectElement(this.personReportingSelect);
             personReportingSelectElement.SelectByIndex(1);
-            log.Info("Selected Person Reporting");
+            Assert.AreEqual("Worker", personReportingSelectElement.SelectedOption.Text);
+            ReportLog.Log("Selected Person Reporting as " + personReportingSelectElement.SelectedOption.Text);
         }
 
         public void SelectPersonReportingName()
         {
             personReportingName.SendKeys("Charles Worker");
+            Assert.AreEqual("Charles Worker", personReportingName.GetAttribute("value"));
+            ReportLog.Log("Input name \"Charles Worker\".");
             wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Charles Worker")));
             driver.FindElement(By.PartialLinkText("Charles Worker")).Click();
-            log.Info("Selected person reporting name as: \"Charles Worker\"");
+            Assert.AreEqual("Charles Worker", personReportingName.GetAttribute("value"));
+            ReportLog.Log("Selected person reporting name as: \"Charles Worker\"");
         }
 
         public void ClickPersonInvolved()
         {
             personInvolvedSelect.Click();
-            log.Info("Clicked the person involved select element");
+            Assert.AreEqual("Employee", personInvolvedSelect.GetAttribute("value"));
+            ReportLog.Log("Clicked the person involved select element.");
         }
 
         public void ClickSensitiveEvent()
         {
             sensitiveEventCheckbox.Click();
-            log.Info("Clicked sensitive event");
+            Assert.True(sensitiveEventCheckbox.Selected);
+            ReportLog.Log("Clicked sensitive event.");
         }
 
         public void FillPersonInvolvedName(string name)
         {
             personInvolvedName.SendKeys(name);
-            log.Info("Filled person involved name as: " +  name);
+            Assert.AreEqual(name, personInvolvedName.GetAttribute("value"));
+            ReportLog.Log("Filled person involved name as: " +  name);
         }
 
         public void SetEventTime(string time)
         {
             eventTime.SendKeys(time);
-            log.Info("Set event time as: " + time);
+            Assert.AreEqual(time, eventTime.GetAttribute("value"));
+            ReportLog.Log("Set event time as: " + time);
         }
 
         public void FillPersonReportingName(string name)
         {
             personReportingName.SendKeys(name);
-            log.Info("Entered person reporting name as: " + name);
+            Assert.AreEqual(name, personReportingName.GetAttribute("value"));
+            ReportLog.Log("Entered person reporting name as: " + name);
         }
 
         public void ClickEventHappenedOffsitCheckbox()
         {
             eventHappenedOffsitCheckbox.Click();
-            log.Info("Clicked event happened offsite.");
+            Assert.True(eventHappenedOffsitCheckbox.Selected);
+            ReportLog.Log("Clicked \"event happened offsite\".");
 
         }
 
         public void ClickReportInjuryArrowButton()
         {
             reportInjuryArrowButton.Click();
-            log.Info("Clicked report an injury arrow button");
+            Assert.AreEqual(ReportInjuryUrl, driver.Url);
+            ReportLog.Log("Clicked report an injury arrow button");
         }
 
         public void FillLocationOfEvent(string location)
         {
             locationOfEvent.SendKeys(location);
-            log.Info("Filled location o fevent as: " + location);
+            wait.Until(ExpectedConditions.TextToBePresentInElementValue(locationOfEvent, location));
+            Assert.AreEqual(location, locationOfEvent.GetAttribute("value"));
+            ReportLog.Log("Filled location of event as: " + location);
         }
 
         public void ClickRespiratoryRadioButton()
         {
+            ReportLog.Log("########################### BEFORE" + respiratoryRadioButton.Selected.ToString());
             respiratoryRadioButton.Click();
-            log.Info("Clicked respiratory radio button");
+            ReportLog.Log("########################### AFTER" + respiratoryRadioButton.Selected.ToString());
+            wait.Until(ExpectedConditions.ElementToBeSelected(respiratoryRadioButton));
+            Assert.True(respiratoryRadioButton.Selected);
+            ReportLog.Log("Clicked respiratory radio button");
         }
 
         public void ClickConcussionAilment()
         {
             concussionAilment.Click();
-            log.Info("Clicked concussion ailment");
+            var concussion = driver.FindElement(By.CssSelector("# detail_desc_table > tbody > tr > td:nth-child(4)")).Text;
+            Assert.AreEqual("Concussion", concussion);
+            ReportLog.Log("Clicked concussion ailment");
         }
 
         public void SetEventDate(string date)
         {
             eventDate.SendKeys(date);
-            log.Info("Set event date as: " + date);
+            var dateValue = eventDate.GetAttribute("value");
+            Assert.AreEqual(date, dateValue);
+            ReportLog.Log("Set event date as: " + date);
         }
 
         public void SelectSubject()
         {
             var subjectSelectElement = new SelectElement(subjectSelect);
             subjectSelectElement.SelectByIndex(2);
-            log.Info("Selected the subject");
+            string selectedSubject = subjectSelectElement.SelectedOption.Text;
+            Assert.AreEqual("Biological agencies", selectedSubject);
+            ReportLog.Log("Selected the subject: Biological agencies.");
         }
 
         public void FillWhoElseWasInvolved(string text)
         {
             whoElseWasInvolvedTextBox.SendKeys(text);
-            log.Info("Fill who else was involved as: " + text);
+            Assert.AreEqual(text, whoElseWasInvolvedTextBox.GetAttribute("value"));
+            ReportLog.Log("Fill who else was involved as: " + text);
         }
 
         public void ClickSaveButton()
         {
             saveButton.Click();
-            log.Info("Clicked save button");
             wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.CssSelector("#vaultModal > div > div > div.modal-header > h4")));
+            string success = driver.FindElement(By.CssSelector("# vaultModal > div > div > div.modal-body > p")).Text;
+            Assert.AreEqual(success, "Thank you for submitting this event. Your Item Reference is:");
+            ReportLog.Log("Clicked save button.");
             referenceID = referenceIDElement.Text;
         }
 
         public void FillWhatHappened(string text)
         {
             whatHappenedTextBox.SendKeys(text);
-            log.Info("Filled what happened as: " + text);
+            Assert.AreEqual(text, whatHappenedTextBox.GetAttribute("value"));
+            ReportLog.Log("Filled what happened as: " + text);
         }
 
         public void FillInitialActions(string text)
         {
             initialActionsTextBox.SendKeys(text);
-            log.Info("Filled what intial actions as: " + text);
+            Assert.AreEqual(text, initialActionsTextBox.GetAttribute("value"));
+            ReportLog.Log("Filled what intial actions as: " + text);
         }
 
         public void ClickBrainBodyArea()
         {
             brainBodyArea.Click();
-            log.Info("Clicked brain body area");
+            Assert.AreEqual("even active", brainBodyArea.GetAttribute("class"));
+            ReportLog.Log("Clicked brain body area");
         }
-
-
+        
         public PortalPage(IWebDriver driver)
         {
             this.driver = driver;
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
             PageFactory.InitElements(driver, this);
         }
-
-
+        
         public void NavigateToPortalPage()
         {
-            driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO");
+            driver.Navigate().GoToUrl(Url);
+            Assert.AreEqual(PortalPage.Url, driver.Url);
+            ReportLog.Log("Navigated to portal page.");
         }
 
         public string GetReferenceID()
@@ -239,6 +275,8 @@ namespace TestVault.PageObjects
             ClickBrainBodyArea();
             ClickConcussionAilment();
             ClickSaveButton();
+            ReportLog.Log("Filled out report an injury.");
         }
     }
 }
+

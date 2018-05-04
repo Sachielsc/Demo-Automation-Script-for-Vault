@@ -49,14 +49,11 @@ namespace TestVault.Test
 				// Add from portal.
 				var portalPage = new PortalPage(driver);
 				portalPage.NavigateToPortalPage();
-				ReportLog.Log("Navigated to portal page.");
 				// Fill out and save a new report.
 				portalPage.ReportAnInjury();
-				ReportLog.Log("Filled out report an injury.");
 				// Login in order to check Event has been added.
 				var loginPage = new LoginPage(driver);
 				loginPage.NavigateToLoginPage();
-				ReportLog.Log("Navigated to login page.");
 				var homePage = loginPage.LoginWithCredentials("plan.8", "plan01#");
 				ReportLog.Log("Submitted login details.");
 				// Now check if the event has been added.
@@ -78,7 +75,7 @@ namespace TestVault.Test
 					throw a;
 				}
 			}
-			catch (Exception e)
+			catch (AssertionException e)
 			{
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
@@ -86,6 +83,11 @@ namespace TestVault.Test
 			}
 		}
 
+        /// <summary>
+        /// Take a screenshot using the driver. Save it by appending the current date/time to the supplied filename. Return it's path.
+        /// </summary>
+        /// <param name="filename">The name of the file</param>
+        /// <returns>The path to the screenshot</returns>
 	    public string TakeScreenShot(string filename)
 	    {
 	        ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
@@ -96,6 +98,9 @@ namespace TestVault.Test
 	        return finalpath;
 	    }
 
+        /// <summary>
+        /// This is an end-to-end test case for editing an event from the Events register.
+        /// </summary>
 	    [Test]
 		public void EditAnEventItem()
 		{
@@ -117,35 +122,48 @@ namespace TestVault.Test
 				homePage.WaitUntilHomePageLoadingComplete();
 				ReportLog.Log("Login confirmed and redirected back to Home Page.");
 
-				// Go to events page
+				// Go to events page.
 				EventsPage eventsPage = homePage.GoToEventsPage();
 				eventsPage.WaitUntilEventsPageLoadingComplete();
 				ReportLog.Log("Navigated to Events Page.");
 
-				// go to event item page of a specific item
+				// Go to event item page of a specific item.
 				EventsItemPage eventsItemPage = eventsPage.GoToSpecificEventsItemPage(0);
 				eventsItemPage.WaitUntilEventsItemPageLoadingComplete();
-				ReportLog.Log("Go to the editing page of a specific item");
+				ReportLog.Log("Go to the editing page of a specific item.");
 
-				// input mandatory values, save changes and extract item reference ID
+				// Input mandatory values, save changes and extract item reference ID.
 				string referenceID = eventsItemPage.InputMandatoryChangesAndSave().Substring(13);
 				ReportLog.Log("Mandatory fields inputted and changes saved.");
 
-				// search for this specific item
+				// Search for this specific item.
 				eventsPage.SearchByReferenceID(referenceID);
+			    try
+			    {
+			        // Assertion.
+				    eventsPage.ConfirmEventEdited(referenceID);
+				    ReportLog.Pass("EditAnEventItem.");
+			    }
+			    catch (AssertionException a)
+			    {
+			        // Test failed due to assertion error.
+			        ReportLog.Fail(a.Message, TakeScreenShot("AddAnEventItemViaPortal"));
+                }
 
-				// assertion
-				eventsPage.ConfirmEventEdited(referenceID);
-				ReportLog.Pass("EditAnEventItem Test Passed.");
+			    
 			}
 			catch (Exception e)
 			{
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
+                ReportLog.Fail("UnforeseenException",TakeScreenShot("UnforeseenException"));
 				throw e;
 			}
 		}
 	
+        /// <summary>
+        /// Quit the ChromeDriver and Flush the Reporter.
+        /// </summary>
 		[TearDown]
 		public void CleanUp()
 		{

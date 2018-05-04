@@ -65,7 +65,7 @@ namespace TestVault.PageObjects
 
 		public void WaitUntilEventsPageLoadingComplete()
 		{
-			wait.Until(ExpectedConditions.ElementToBeClickable(dataTablesPaginate)); /* tip */
+			wait.Until(ExpectedConditions.ElementToBeClickable(dataTablesPaginate));
 		}
 
 		public EventsItemPage GoToSpecificEventsItemPage(int index)
@@ -97,15 +97,15 @@ namespace TestVault.PageObjects
 
             string[] actual =
             {
-                rowData[0].FindElement(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr/td[1]/a")).Text,    // ID.
-                rowData[2].Text,                                                        // Subject.
-                rowData[3].Text,                                                        // Date.
-                rowData[4].Text,                                                        // Event Type.
-                rowData[6].Text,                                                        // Person Type.
-                rowData[7].Text,                                                        // Name.
-                rowData[8].Text,                                                        // Site.
-                rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,        // Pending.
-                rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text      // Not Started.
+                rowData[0].FindElement(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr/td[1]/a")).Text,      // ID.
+                rowData[2].Text,                                                                                // Subject.
+                rowData[3].Text,                                                                                // Date.
+                rowData[4].Text,                                                                                // Event Type.
+                rowData[6].Text,                                                                                // Person Type.
+                rowData[7].Text,                                                                                // Name.
+                rowData[8].Text,                                                                                // Site.
+                rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,                                // Pending.
+                rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text                              // Not Started.
             };
             return actual;
         }
