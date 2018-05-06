@@ -105,7 +105,7 @@ namespace TestVault.Reports
 						break;
 					}
 				}
-				Assert.AreEqual(true, actualSelectionFromWebElement.Options[index].Selected);
+				Assert.True(actualSelectionFromWebElement.Options[index].Selected);
 			}
 			catch (AssertionException a)
 			{

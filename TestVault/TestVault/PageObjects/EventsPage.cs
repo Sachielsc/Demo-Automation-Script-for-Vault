@@ -188,7 +188,7 @@ namespace TestVault.PageObjects
 
 		private IList<IWebElement> GetRowItems(IWebElement tableRow)
 		{
-		    wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
+		    //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             return tableRow.FindElements(By.TagName("td"));
         }
     }
