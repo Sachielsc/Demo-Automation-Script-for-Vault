@@ -40,6 +40,7 @@ namespace TestVault.Test
 		/// </summary>
 		[Test]
         [Repeat(25)]
+        [Retry(25)]
 		public void AddAnEventItemViaPortal()
 		{
 			// Set up the test in ReportLog wrapper class.
@@ -81,7 +82,7 @@ namespace TestVault.Test
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
 				throw e;
-			}
+			} 
 		}
 
         /// <summary>
@@ -89,6 +90,7 @@ namespace TestVault.Test
         /// </summary>
 	    [Test]
         [Repeat(25)]
+        [Retry(25)]
 		public void EditAnEventItem()
 		{
 			// Set up the test in ReportLog wrapper class.
