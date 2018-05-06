@@ -2,15 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Support.PageObjects;
 using TestVault.PageObjects;
-using NUnit.Framework;
 using TestVault.Reports;
+using Assert = NUnit.Framework.Assert;
+using Timer = System.Timers.Timer;
 
 namespace TestVault.PageObjects
 {
@@ -85,29 +90,50 @@ namespace TestVault.PageObjects
         public void SearchByReferenceID(string refID)
         {
             searchBar.SendKeys(refID);
-            wait.Until(ExpectedConditions.TextToBePresentInElementValue(searchBar, refID));
             wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div > vault-loader")));
-            IList<IWebElement> rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
-            while (rows.Count > 1)
+            wait.Until(ExpectedConditions.TextToBePresentInElementValue(searchBar, refID));
+            //IList<IWebElement> rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            bool staleElement = true;
+            Task.Delay(1000).Wait();        // TODO: Update this. The stale element exception is still being thrown even though the logic of this loop is sound.
+            while (staleElement)
             {
-                rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+                // do something
+                try
+                {
+                    wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-id='" + refID + "']")));
+                    staleElement = false;
+                }
+                catch (StaleElementReferenceException e)
+                {
+                    staleElement = true;
+                }
+                if (timer.Elapsed.TotalSeconds > 10)
+                {
+                    staleElement = false;
+                    ReportLog.Fail("Failed to find the ref: " + refID, "FailedToFindRefID");
+                }
             }
 
-
-            //Task.Delay(1250).Wait();
-            singleRowSearchResult = GetResultOfIDSearch();
+            timer.Stop();
+            //while (rows.Count > 1)
+            //{
+            //    rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            //}
+            singleRowSearchResult = GetResultOfIDSearch(refID);
         }
 
-        private string[] GetResultOfIDSearch()
+        private string[] GetResultOfIDSearch(string referenece)
         {
-            var rowData = GetRowItems(GetTableRows()[0]);
+            var rowData = GetRowItems(GetTableRows(referenece)[0]);
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
-            
+
 
             string[] actual =
             {
-                rowData[0].FindElement(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr/td[1]/a")).Text,      // ID.
+                rowData[0].FindElement(By.CssSelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.expand.sorting_1 > a")).Text,      // ID.
                 rowData[2].Text,                                                                                // Subject.
                 rowData[3].Text,                                                                                // Date.
                 rowData[4].Text,                                                                                // Event Type.
@@ -121,10 +147,12 @@ namespace TestVault.PageObjects
         }
 
 
-        public IList<IWebElement> GetTableRows()
+        public IList<IWebElement> GetTableRows(string reference)
         {
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
-            return driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-id='" + reference + "']")));
+            var rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            return rows;
+            //wait.Until(ExpectedConditions.ElementToBeClickable(driver.FindElement(By.PartialLinkText("Actions"))));
         }
 
         public void ConfirmEventAdded(string id)
@@ -159,7 +187,8 @@ namespace TestVault.PageObjects
 		}
 
 		private IList<IWebElement> GetRowItems(IWebElement tableRow)
-        {
+		{
+		    wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             return tableRow.FindElements(By.TagName("td"));
         }
     }
