@@ -40,8 +40,8 @@ namespace TestVault.Test
 		/// </summary>
 		[Test]
         [Repeat(25)]
-        [Retry(25)]
-		public void AddAnEventItemViaPortal()
+        //[Retry(25)]
+        public void AddAnEventItemViaPortal()
 		{
 			// Set up the test in ReportLog wrapper class.
 			ReportLog.CreateTest("AddAnEventItemViaPortal",
@@ -62,7 +62,7 @@ namespace TestVault.Test
 				var eventsPage = new EventsPage(driver);
 				eventsPage.NavigateToEventsPage();
 				ReportLog.Log("Navigated to Events page.");
-				eventsPage.SearchByReferenceID(portalPage.GetReferenceID());
+				eventsPage.SearchByReferenceID(portalPage.GetReferenceID(), true, true);
 				ReportLog.Log("Searched for reference ID: " + portalPage.GetReferenceID());
 				try
 				{
@@ -74,14 +74,13 @@ namespace TestVault.Test
 				{
                     // Test failed due to assertion error.
                     ReportLog.Fail(a.Message, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
-					throw a;
+					//throw a;
 				}
 			}
-			catch (AssertionException e)
+			catch (Exception e)
 			{
 				// Test failed due to unforeseen exception.
-				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
-				throw e;
+				ReportLog.Fail(e.Message + "\n" + e.StackTrace, ReportLog.TakeScreenShot("UnforeseenException", driver));
 			} 
 		}
 
@@ -90,8 +89,8 @@ namespace TestVault.Test
         /// </summary>
 	    [Test]
         [Repeat(25)]
-        [Retry(25)]
-		public void EditAnEventItem()
+        //[Retry(25)]
+        public void EditAnEventItem()
 		{
 			// Set up the test in ReportLog wrapper class.
 			ReportLog.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");
@@ -126,7 +125,7 @@ namespace TestVault.Test
 				ReportLog.Log("Mandatory fields inputted and changes saved.");
 
 				// Search for this specific item.
-				eventsPage.SearchByReferenceID(referenceID);
+				eventsPage.SearchByReferenceID(referenceID, false, true);
 			    try
 			    {
 			        // Assertion.
@@ -146,7 +145,7 @@ namespace TestVault.Test
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace);
                 ReportLog.Fail("UnforeseenException", ReportLog.TakeScreenShot("UnforeseenException", driver));
-				throw e;
+				//throw e;
 			}
 		}
 	
