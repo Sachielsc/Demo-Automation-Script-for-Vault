@@ -29,6 +29,7 @@ namespace TestVault.PageObjects
 		private WebDriverWait wait;
 		private string[] singleRowSearchResult;
 		private IList<IWebElement> multipleRowsSearchResult;
+        private static string Url = "https://alphav3.vaultintel.com/incidentManagement/incidentRegisters/index";
         // This "labels" string[] represents the column headers of the Events Register table.
         private string[] labels =
         {
@@ -87,40 +88,28 @@ namespace TestVault.PageObjects
         public void NavigateToEventsPage()
         {
             driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/incidentManagement/incidentRegisters/index");
+            Assert.AreEqual(EventsPage.Url, driver.Url);
+
         }
 
         public void SearchByReferenceID(string refID, bool pending, bool notStarted)
         {
             wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Actions")));
+            IWebElement id = driver.FindElement(By.CssSelector("a[data-id='" + refID + "']"));
             searchBar.SendKeys(refID);
-            wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div > vault-loader")));
-            wait.Until(ExpectedConditions.TextToBePresentInElementValue(searchBar, refID));
-            wait.Until(ExpectedConditions.StalenessOf(driver.FindElement(By.PartialLinkText("Actions"))));
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            bool staleElement = true;
-            Task.Delay(1000).Wait();        // TODO: Update this. The stale element exception is still being thrown even though the logic of this loop is sound.
-            int count = 0;
-            while (staleElement)
+            bool staleElement = false;
+            while (!staleElement)
             {
-                count++;
-                ReportLog.Log("#################### Tried " + count + " times.");
                 try
                 {
-                    wait.Until(ExpectedConditions.ElementToBeClickable(driver.FindElement(By.CssSelector("a[data-id='" + refID + "']"))));
-                    staleElement = false;
+                    wait.Until(ExpectedConditions.StalenessOf(id));
+                    staleElement = true;
                 }
                 catch (StaleElementReferenceException e)
                 {
                     staleElement = true;
                 }
-                if (timer.Elapsed.TotalSeconds > 10)
-                {
-                    staleElement = false;
-                    ReportLog.Fail("Failed to find the ref: " + refID, "FailedToFindRefID");
-                }
             }
-            timer.Stop();
             singleRowSearchResult = GetResultOfIDSearch(refID, pending, notStarted);
         }
 

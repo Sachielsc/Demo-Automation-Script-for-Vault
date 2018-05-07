@@ -39,8 +39,6 @@ namespace TestVault.Test
 		/// This is an end-to-end test case for adding an event from the portal.
 		/// </summary>
 		[Test]
-        //[Repeat(25)]
-        //[Retry(25)]
         public void AddAnEventItemViaPortal()
 		{
 			// Set up the test in ReportLog wrapper class.
@@ -76,7 +74,6 @@ namespace TestVault.Test
                     ReportLog.Fail(a.Message + "\n" + a.StackTrace, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
                     throw a;
                 }
-				driver.Quit();
 			}
 			catch (Exception e)
 			{
@@ -90,14 +87,11 @@ namespace TestVault.Test
         /// This is an end-to-end test case for editing an event from the Events register.
         /// </summary>
 	    [Test]
-        //[Repeat(25)]
-        //[Retry(25)]
         public void EditAnEventItem()
 		{
 			// Set up the test in ReportLog wrapper class.
 			ReportLog.CreateTest("EditAnEventItem", "This is an end-to-end test case regarding the editing of an Event.");
-
-			try
+            try
 			{
 				// Log in.
 				LoginPage loginPage = new LoginPage(driver);
@@ -158,6 +152,7 @@ namespace TestVault.Test
 		public void CleanUp()
 		{
             ReportLog.Flush();
+            driver.Quit();
 		}
 	}
 }

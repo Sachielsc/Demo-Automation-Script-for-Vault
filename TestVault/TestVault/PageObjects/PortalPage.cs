@@ -115,7 +115,6 @@ namespace TestVault.PageObjects
             personInvolvedSelect.Click();
             Assert.AreEqual("Employee", personInvolvedSelect.GetAttribute("value"));
             ReportLog.Log("Clicked the person involved select element.");
-            //Task.Delay(200).Wait();
 
         }
 
