@@ -39,6 +39,9 @@ namespace TestVault.PageObjects
 		[FindsBy(How = How.CssSelector, Using = "input#revdate")]
 		private IWebElement dateDue;
 
+		[FindsBy(How = How.CssSelector, Using = "input#incident-date")]
+		private IWebElement eventDate;
+
 		[FindsBy(How = How.CssSelector, Using = "div#event-register-ajax-container>div.row>div button.btn_save")]  /* tip: nth of type or child */
 		private IWebElement saveToEventsButton;
 
@@ -81,6 +84,12 @@ namespace TestVault.PageObjects
 
 			SelectElement severity = new SelectElement(driver.FindElement(By.Id("severityid")));
 			severity.SelectByText("Between Life and Death");
+
+			SelectElement subject = new SelectElement(driver.FindElement(By.Id("e_subject_id")));
+			subject.SelectByText("Biological agencies");
+
+			eventDate.Clear();
+			eventDate.SendKeys("02/05/2018");
 
 			// correct bugs (TODO: can be deleted after this bug is fixed)
 			SelectElement personReporting = new SelectElement(driver.FindElement(By.Id("e_i_reported_type")));

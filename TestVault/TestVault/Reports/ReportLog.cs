@@ -84,7 +84,7 @@ namespace TestVault.Reports
 			{
 				// Test failed due to assertion error.
 				Fail(a.Message, TakeScreenShot(testCase, driver));
-				//throw a;
+				throw a;
 			}
 
 		}
@@ -111,7 +111,7 @@ namespace TestVault.Reports
 			{
 				// Test failed due to assertion error.
 				Fail(a.Message, TakeScreenShot(testCase, driver));
-				//throw a;
+				throw a;
 			}
 			Pass("The input '" + expectedSelectedText + "' has been selected.");
 		}
