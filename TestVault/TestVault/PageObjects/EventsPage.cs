@@ -33,9 +33,11 @@ namespace TestVault.PageObjects
         private string[] labels =
         {
             "ID",
+            "Case Number",
             "Subject",
             "Date",
             "Event Type",
+            "Category",
             "Person Type",
             "Name",
             "Site",
@@ -124,9 +126,9 @@ namespace TestVault.PageObjects
             singleRowSearchResult = GetResultOfIDSearch(refID, pending, notStarted);
         }
 
-        private string[] GetResultOfIDSearch(string referenece, bool pending, bool notStarted)
+        private string[] GetResultOfIDSearch(string reference, bool pending, bool notStarted)
         {
-            var rowData = GetRowItems(GetTableRows(referenece)[0]);
+            var rowData = GetRowItems(GetTableRows(reference)[0]);
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
 
