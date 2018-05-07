@@ -39,7 +39,7 @@ namespace TestVault.Test
 		/// This is an end-to-end test case for adding an event from the portal.
 		/// </summary>
 		[Test]
-        [Repeat(25)]
+        //[Repeat(25)]
         //[Retry(25)]
         public void AddAnEventItemViaPortal()
 		{
