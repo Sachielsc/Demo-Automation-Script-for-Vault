@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,7 +115,7 @@ namespace TestVault.PageObjects
             personInvolvedSelect.Click();
             Assert.AreEqual("Employee", personInvolvedSelect.GetAttribute("value"));
             ReportLog.Log("Clicked the person involved select element.");
-            Task.Delay(200).Wait();
+            //Task.Delay(200).Wait();
 
         }
 
@@ -163,11 +164,30 @@ namespace TestVault.PageObjects
 
         public void FillLocationOfEvent(string location)
         {
-            Task.Delay(200).Wait();
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#location")));
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#location")));
-            locationOfEvent.SendKeys(location);
-            Task.Delay(200).Wait();
+            bool textNotEntered = true;
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            while (textNotEntered)
+            {
+                locationOfEvent.SendKeys(location);
+                try
+                {
+                    wait.Until(ExpectedConditions.TextToBePresentInElementValue(locationOfEvent, location));
+                    textNotEntered = false;
+                }
+                catch (WebDriverTimeoutException t)
+                {
+                    locationOfEvent.Clear();
+                }
+                if (timer.Elapsed.Seconds > 10)
+                {
+                    textNotEntered = false;
+                    ReportLog.Fail("Couldn't input location.");
+                    throw new WebDriverTimeoutException("Couldn't input location.");
+                }
+            }
             Assert.AreEqual(location, locationOfEvent.GetAttribute("value"));
             ReportLog.Log("Filled location of event as: " + location);
         }

@@ -66,6 +66,7 @@ namespace TestVault.Reports
         public static void Fail(string info, string screenshotPath)
         {
             test.Fail(info, MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
+            log.Error(info);
             log.Error("Screen shot at " + screenshotPath);
         }
 
@@ -84,8 +85,8 @@ namespace TestVault.Reports
 			{
 				// Test failed due to assertion error.
 				Fail(a.Message, TakeScreenShot(testCase, driver));
-				//throw a;
-			}
+                throw a;
+            }
 
 		}
 
@@ -111,8 +112,8 @@ namespace TestVault.Reports
 			{
 				// Test failed due to assertion error.
 				Fail(a.Message, TakeScreenShot(testCase, driver));
-				//throw a;
-			}
+                throw a;
+            }
 			Pass("The input '" + expectedSelectedText + "' has been selected.");
 		}
 		/// <summary>

@@ -29,7 +29,7 @@ namespace TestVault.PageObjects
 		private WebDriverWait wait;
 		private string[] singleRowSearchResult;
 		private IList<IWebElement> multipleRowsSearchResult;
-        // This "labels" string[] represents (some, not all, of) the column headers of the Events Register table.
+        // This "labels" string[] represents the column headers of the Events Register table.
         private string[] labels =
         {
             "ID",
@@ -91,20 +91,23 @@ namespace TestVault.PageObjects
 
         public void SearchByReferenceID(string refID, bool pending, bool notStarted)
         {
+            wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Actions")));
             searchBar.SendKeys(refID);
             wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div > vault-loader")));
             wait.Until(ExpectedConditions.TextToBePresentInElementValue(searchBar, refID));
-            //IList<IWebElement> rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
+            wait.Until(ExpectedConditions.StalenessOf(driver.FindElement(By.PartialLinkText("Actions"))));
             Stopwatch timer = new Stopwatch();
             timer.Start();
             bool staleElement = true;
             Task.Delay(1000).Wait();        // TODO: Update this. The stale element exception is still being thrown even though the logic of this loop is sound.
+            int count = 0;
             while (staleElement)
             {
-                // do something
+                count++;
+                ReportLog.Log("#################### Tried " + count + " times.");
                 try
                 {
-                    wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-id='" + refID + "']")));
+                    wait.Until(ExpectedConditions.ElementToBeClickable(driver.FindElement(By.CssSelector("a[data-id='" + refID + "']"))));
                     staleElement = false;
                 }
                 catch (StaleElementReferenceException e)
@@ -117,12 +120,7 @@ namespace TestVault.PageObjects
                     ReportLog.Fail("Failed to find the ref: " + refID, "FailedToFindRefID");
                 }
             }
-
             timer.Stop();
-            //while (rows.Count > 1)
-            //{
-            //    rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
-            //}
             singleRowSearchResult = GetResultOfIDSearch(refID, pending, notStarted);
         }
 
@@ -132,10 +130,9 @@ namespace TestVault.PageObjects
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
 
-
             string[] actual =
             {
-                rowData[0].FindElement(By.CssSelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.expand.sorting_1 > a")).Text,         // ID.
+                rowData[0].FindElement(By.XPath(".//a")).Text,         // ID.
                 rowData[1].Text,                                                                                                                // Case number.
                 rowData[2].Text,                                                                                                                // Subject.
                 rowData[3].Text,                                                                                                                // Date.
@@ -150,13 +147,11 @@ namespace TestVault.PageObjects
             return actual;
         }
 
-
         public IList<IWebElement> GetTableRows(string reference)
         {
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[data-id='" + reference + "']")));
             var rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
             return rows;
-            //wait.Until(ExpectedConditions.ElementToBeClickable(driver.FindElement(By.PartialLinkText("Actions"))));
         }
 
         public void ConfirmEventAdded(string id)
@@ -184,7 +179,6 @@ namespace TestVault.PageObjects
 
 		public void ConfirmEventEdited(string id)
 		{
-
 		    string[] expected =
 		    {
 		        id,
@@ -204,19 +198,10 @@ namespace TestVault.PageObjects
 		        Assert.AreEqual(expected[i], singleRowSearchResult[i]);
 		        ReportLog.Pass(" " + labels[i] + " matched.");
 		    }
-
-
-   //         Assert.AreEqual(id, singleRowSearchResult[0]);
-			//ReportLog.Pass("ID matched.");
-			//Assert.AreEqual("Worker", singleRowSearchResult[4]);
-			//ReportLog.Pass("Person Type matched.");
-			//Assert.AreEqual("Jack Brazier", singleRowSearchResult[5]);
-			//ReportLog.Pass("Name matched.");
 		}
 
 		private IList<IWebElement> GetRowItems(IWebElement tableRow)
 		{
-		    //wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Actions")));
             return tableRow.FindElements(By.TagName("td"));
         }
     }
