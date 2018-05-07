@@ -127,12 +127,14 @@ namespace TestVault.PageObjects
         private string[] GetResultOfIDSearch(string reference, bool pending, bool notStarted)
         {
             var rowData = GetRowItems(GetTableRows(reference)[0]);
-            string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
+			string referenceIdCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td.expand.sorting_1 > a";
+
+			string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
             string notStartedCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.status-danger";
 
             string[] actual =
             {
-                rowData[0].FindElement(By.XPath(".//a")).Text,         // ID.
+                rowData[0].FindElement(By.XPath(".//a")).Text,
                 rowData[1].Text,                                                                                                                // Case number.
                 rowData[2].Text,                                                                                                                // Subject.
                 rowData[3].Text,                                                                                                                // Date.
