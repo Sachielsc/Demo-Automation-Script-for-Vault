@@ -162,6 +162,7 @@ namespace TestVault.PageObjects
 
         public void FillLocationOfEvent(string location)
         {
+            Task.Delay(200).Wait();
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#location")));
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#location")));
             locationOfEvent.SendKeys(location);
@@ -191,6 +192,7 @@ namespace TestVault.PageObjects
         public void SetEventDate(string date)
         {
             eventDate.SendKeys(date);
+            wait.Until(ExpectedConditions.TextToBePresentInElementValue(eventDate, date));
             var dateValue = eventDate.GetAttribute("value");
             Assert.AreEqual(date, dateValue);
             ReportLog.Log("Set event date as: " + date);

@@ -87,7 +87,7 @@ namespace TestVault.PageObjects
             driver.Navigate().GoToUrl("https://alphav3.vaultintel.com/incidentManagement/incidentRegisters/index");
         }
 
-        public void SearchByReferenceID(string refID)
+        public void SearchByReferenceID(string refID, bool pending, bool notStarted)
         {
             searchBar.SendKeys(refID);
             wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div > vault-loader")));
@@ -121,10 +121,10 @@ namespace TestVault.PageObjects
             //{
             //    rows = driver.FindElements(By.XPath("//*[@id=\"DataTables_Table_0\"]/tbody/tr"));
             //}
-            singleRowSearchResult = GetResultOfIDSearch(refID);
+            singleRowSearchResult = GetResultOfIDSearch(refID, pending, notStarted);
         }
 
-        private string[] GetResultOfIDSearch(string referenece)
+        private string[] GetResultOfIDSearch(string referenece, bool pending, bool notStarted)
         {
             var rowData = GetRowItems(GetTableRows(referenece)[0]);
             string pendingCssSelector = "#DataTables_Table_0 > tbody > tr:nth-child(1) > td:nth-child(10) > span.blk-status.label.label-danger.margin-right-5";
@@ -133,15 +133,17 @@ namespace TestVault.PageObjects
 
             string[] actual =
             {
-                rowData[0].FindElement(By.CssSelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.expand.sorting_1 > a")).Text,      // ID.
-                rowData[2].Text,                                                                                // Subject.
-                rowData[3].Text,                                                                                // Date.
-                rowData[4].Text,                                                                                // Event Type.
-                rowData[6].Text,                                                                                // Person Type.
-                rowData[7].Text,                                                                                // Name.
-                rowData[8].Text,                                                                                // Site.
-                rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text,                                // Pending.
-                rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text                              // Not Started.
+                rowData[0].FindElement(By.CssSelector("#DataTables_Table_0 > tbody > tr:nth-child(1) > td.expand.sorting_1 > a")).Text,         // ID.
+                rowData[1].Text,                                                                                                                // Case number.
+                rowData[2].Text,                                                                                                                // Subject.
+                rowData[3].Text,                                                                                                                // Date.
+                rowData[4].Text,                                                                                                                // Event Type.
+                rowData[5].Text,                                                                                                                // Category.
+                rowData[6].Text,                                                                                                                // Person Type.
+                rowData[7].Text,                                                                                                                // Name.
+                rowData[8].Text,                                                                                                                // Site.
+                pending ? rowData[9].FindElement(By.CssSelector(pendingCssSelector)).Text : "No Pending",                                       // Pending.
+                notStarted ? rowData[9].FindElement(By.CssSelector(notStartedCssSelector)).Text : "No Not Started"                              // Not Started.
             };
             return actual;
         }
@@ -160,9 +162,11 @@ namespace TestVault.PageObjects
             string[] expected =
             {
                 id,
+                "",
                 "Biological agencies",
                 "02/05/2018",
                 "Injury",
+                "",
                 "Worker",
                 "Charles Worker",
                 "Adelaide - Head Office",
@@ -178,12 +182,34 @@ namespace TestVault.PageObjects
 
 		public void ConfirmEventEdited(string id)
 		{
-			Assert.AreEqual(id, singleRowSearchResult[0]);
-			ReportLog.Pass("ID matched.");
-			Assert.AreEqual("Worker", singleRowSearchResult[4]);
-			ReportLog.Pass("Person Type matched.");
-			Assert.AreEqual("Jack Brazier", singleRowSearchResult[5]);
-			ReportLog.Pass("Name matched.");
+
+		    string[] expected =
+		    {
+		        id,
+		        "whatever",
+		        "Biological agencies",
+		        "02/05/2018",
+		        "Injury",
+		        "Strain",
+		        "Worker",
+		        "Jack Brazier",
+		        "Brisbane Office",
+		        "No Pending",
+		        "Not Started"
+		    };
+		    for (int i = 0; i < expected.Length; i++)
+		    {
+		        Assert.AreEqual(expected[i], singleRowSearchResult[i]);
+		        ReportLog.Pass(" " + labels[i] + " matched.");
+		    }
+
+
+   //         Assert.AreEqual(id, singleRowSearchResult[0]);
+			//ReportLog.Pass("ID matched.");
+			//Assert.AreEqual("Worker", singleRowSearchResult[4]);
+			//ReportLog.Pass("Person Type matched.");
+			//Assert.AreEqual("Jack Brazier", singleRowSearchResult[5]);
+			//ReportLog.Pass("Name matched.");
 		}
 
 		private IList<IWebElement> GetRowItems(IWebElement tableRow)
