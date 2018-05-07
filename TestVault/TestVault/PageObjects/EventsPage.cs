@@ -95,20 +95,13 @@ namespace TestVault.PageObjects
         public void SearchByReferenceID(string refID, bool pending, bool notStarted)
         {
             wait.Until(ExpectedConditions.ElementIsVisible(By.PartialLinkText("Actions")));
-            IWebElement id = driver.FindElement(By.CssSelector("a[data-id='" + refID + "']"));
             searchBar.SendKeys(refID);
+            IWebElement id = driver.FindElement(By.CssSelector("a[data-id='" + refID + "']"));
             bool staleElement = false;
             while (!staleElement)
             {
-                try
-                {
                     wait.Until(ExpectedConditions.StalenessOf(id));
                     staleElement = true;
-                }
-                catch (StaleElementReferenceException e)
-                {
-                    staleElement = true;
-                }
             }
             singleRowSearchResult = GetResultOfIDSearch(refID, pending, notStarted);
         }
