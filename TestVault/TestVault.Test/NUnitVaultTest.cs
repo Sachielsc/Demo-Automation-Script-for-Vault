@@ -74,13 +74,14 @@ namespace TestVault.Test
 				{
                     // Test failed due to assertion error.
                     ReportLog.Fail(a.Message, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
-					//throw a;
-				}
+                    throw a;
+                }
 			}
 			catch (Exception e)
 			{
 				// Test failed due to unforeseen exception.
 				ReportLog.Fail(e.Message + "\n" + e.StackTrace, ReportLog.TakeScreenShot("UnforeseenException", driver));
+			    throw e;
 			} 
 		}
 

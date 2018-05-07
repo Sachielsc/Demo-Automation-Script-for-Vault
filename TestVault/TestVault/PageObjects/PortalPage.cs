@@ -114,7 +114,8 @@ namespace TestVault.PageObjects
             personInvolvedSelect.Click();
             Assert.AreEqual("Employee", personInvolvedSelect.GetAttribute("value"));
             ReportLog.Log("Clicked the person involved select element.");
-            
+            Task.Delay(200).Wait();
+
         }
 
         public void ClickSensitiveEvent()
@@ -166,7 +167,7 @@ namespace TestVault.PageObjects
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#location")));
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#location")));
             locationOfEvent.SendKeys(location);
-            wait.Until(ExpectedConditions.TextToBePresentInElementValue(locationOfEvent, location));
+            Task.Delay(200).Wait();
             Assert.AreEqual(location, locationOfEvent.GetAttribute("value"));
             ReportLog.Log("Filled location of event as: " + location);
         }
