@@ -74,6 +74,7 @@ namespace TestVault.Test
                     ReportLog.Fail(a.Message + "\n" + a.StackTrace, ReportLog.TakeScreenShot("AddAnEventItemViaPortal", driver));
                     throw a;
                 }
+				driver.Quit();
 			}
 			catch (Exception e)
 			{
@@ -152,7 +153,6 @@ namespace TestVault.Test
 		public void CleanUp()
 		{
             ReportLog.Flush();
-            driver.Quit();
 		}
 	}
 }
