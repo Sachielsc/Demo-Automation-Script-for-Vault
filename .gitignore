@@ -211,5 +211,8 @@ project.lock.json
 #####
 
 # ExtentReports
+**/TestResults/*.html
+**/TestResults/ErrorScreenshots/*.png
 
 # Log4Net
+**/TestResults/*.log
