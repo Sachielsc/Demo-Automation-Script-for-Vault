@@ -112,7 +112,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="license" />
-    <None Include="log4net.config" />
+    <None Include="log4net.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

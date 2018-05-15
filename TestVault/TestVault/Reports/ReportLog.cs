@@ -126,7 +126,7 @@ namespace TestVault.Reports
             ITakesScreenshot takeScreenshot = (ITakesScreenshot)driver;
             Screenshot screenshot = takeScreenshot.GetScreenshot();
             string path = AppDomain.CurrentDomain.BaseDirectory;
-            string finalpath = path + "..\\..\\..\\..\\TestVault\\TestVault\\Reports\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
+            string finalpath = path + "..\\..\\..\\..\\TestVault\\TestResults\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
             screenshot.SaveAsFile(finalpath);
             return finalpath;
         }
@@ -157,8 +157,8 @@ namespace TestVault.Reports
         /// <returns>New HTML Reporter</returns>
         private static ExtentHtmlReporter GetHtmlReporter()
         {
-            var dir = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\TestVault\\TestVault\\Reports/"; /* Tips! */
-            var fileName = "Extent.html";
+            var dir = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\TestVault\\TestResults/"; /* Tips! */
+            var fileName = "ReportByExtentReports.html";
             htmlReporter = new ExtentHtmlReporter(dir + fileName);
             htmlReporter.Configuration().ChartVisibilityOnOpen = true;
             htmlReporter.Configuration().ChartLocation = ChartLocation.Top;
