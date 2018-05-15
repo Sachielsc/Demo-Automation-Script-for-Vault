@@ -21,10 +21,9 @@ namespace TestVault.PageObjects
 
         public const string Url = "https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO";
 
-        public const string ReportInjuryUrl =
-            "https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO#!report-injury";
+		public const string ReportInjuryUrl = "https://alphav3.vaultintel.com/kiosk/index?id=69pxsk971an3r5vwrw1cg9a2uzcd1xiu2wvu4ub315dzd4q7xf3n0avwvtjrcjbs&cid=DEMO#!report-injury";
 
-        [FindsBy(How = How.CssSelector, Using = "#content > div:nth-child(2) > div:nth-child(1) > div > span > a > i")]
+		[FindsBy(How = How.CssSelector, Using = "#content > div:nth-child(2) > div:nth-child(1) > div > span > a > i")]
         private IWebElement reportInjuryArrowButton;
 
         [FindsBy(How = How.CssSelector, Using = "#per_reporting")]
