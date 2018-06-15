@@ -127,7 +127,7 @@ namespace TestVault.Reports
             Screenshot screenshot = takeScreenshot.GetScreenshot();
             string path = AppDomain.CurrentDomain.BaseDirectory;
             string finalpath = path + "..\\..\\..\\..\\TestVault\\TestResults\\ErrorScreenshots\\" + filename + DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss") + ".png";
-            screenshot.SaveAsFile(finalpath);
+            screenshot.SaveAsFile(finalpath);  // tips: this is how we use a relative path
             return finalpath;
         }
 
